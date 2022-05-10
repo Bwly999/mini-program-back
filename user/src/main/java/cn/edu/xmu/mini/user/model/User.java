@@ -2,6 +2,7 @@ package cn.edu.xmu.mini.user.model;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
 @Data
@@ -12,6 +13,7 @@ public class User {
     /**
      * 小程序用户唯一标识
     */
+    @Indexed
     private String openId;
 
     private UserInfo userInfo;
