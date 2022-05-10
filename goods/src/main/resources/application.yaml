@@ -5,6 +5,6 @@ wishes:
     active: webdav
     webdav:
       url: http://122.9.38.18//webdav/
-      directory: test
+      directory: goods
       username: dev
       password: Wishes12345678

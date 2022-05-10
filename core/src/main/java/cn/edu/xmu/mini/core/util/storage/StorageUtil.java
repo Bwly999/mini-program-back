@@ -17,12 +17,10 @@ public class StorageUtil {
      * 存储一个文件对象
      *
      * @param inputStream   文件输入流
-     * @param contentLength 文件长度
-     * @param contentType   文件类型
      * @param fileName      文件索引名
      */
-    public String store(InputStream inputStream, long contentLength, String contentType, String key) {
-        return storage.store(inputStream, contentLength, contentType, key);
+    public String store(InputStream inputStream, String fileName) {
+        return storage.store(inputStream, 0L, "file", fileName);
     }
 
     public String storeImg(InputStream inputStream, String key) {
