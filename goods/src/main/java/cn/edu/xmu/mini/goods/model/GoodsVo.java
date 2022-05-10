@@ -1,7 +1,6 @@
 package cn.edu.xmu.mini.goods.model;
 
 import lombok.Data;
-import org.checkerframework.checker.index.qual.LessThan;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;

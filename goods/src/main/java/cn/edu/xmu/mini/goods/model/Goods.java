@@ -1,5 +1,6 @@
 package cn.edu.xmu.mini.goods.model;
 
+import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
@@ -29,6 +30,7 @@ public class Goods {
     private String shopId;
 
     @Data
+    @Builder
     public static class GoodsDetail {
         private String originPlace;
         /**

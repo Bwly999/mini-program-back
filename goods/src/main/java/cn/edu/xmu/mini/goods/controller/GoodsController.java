@@ -29,6 +29,12 @@ public class GoodsController {
 
     @PostMapping("/")
     public Object addGoods(@RequestBody GoodsVo goodsVo) {
+        Goods goods = goodsService.saveGoods(goodsVo);
+        return Common.decorateReturnObject(new ReturnObject(goods));
+    }
 
+    @PostMapping("/img")
+    public Object uploadImage() {
+        return null;
     }
 }
