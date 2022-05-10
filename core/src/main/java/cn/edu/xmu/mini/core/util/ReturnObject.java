@@ -8,6 +8,7 @@ import lombok.Getter;
  **/
 @Getter
 public class ReturnObject<T> {
+    public static ReturnObject INTERNAL_SERVER_ERR_RETURN_OBJ = new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR);
 
     /**
      * 错误号

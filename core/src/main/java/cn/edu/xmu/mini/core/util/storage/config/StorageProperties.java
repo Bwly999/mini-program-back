@@ -9,7 +9,6 @@ public class StorageProperties {
     private String active;
     private Local local;
     private Webdav webdav;
-    private Qiniu qiniu;
 
     @Data
     public static class Local {
@@ -23,13 +22,5 @@ public class StorageProperties {
         private String directory;
         private String username;
         private String password;
-    }
-
-    @Data
-    public static class Qiniu {
-        private String endpoint;
-        private String accessKey;
-        private String secretKey;
-        private String bucketName;
     }
 }

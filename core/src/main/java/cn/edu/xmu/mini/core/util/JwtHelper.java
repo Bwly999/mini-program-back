@@ -77,7 +77,7 @@ public class JwtHelper {
      * @param departId 部门id
      * @return token
      */
-    public String createToken(Long userId, String userName,Long departId,Integer userLevel, int expireTime) {
+    public String createToken(String userId, String userName,Long departId,Integer userLevel, int expireTime) {
         logger.debug("createToken:");
         try {
             Algorithm algorithm = Algorithm.HMAC256(SECRET);
