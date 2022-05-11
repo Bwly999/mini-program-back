@@ -34,10 +34,8 @@ public class UserService implements InitializingBean {
 
     public User saveUser(UserVo userVo) {
         User user = new User();
-        User.UserInfo userInfo = new User.UserInfo();
-        BeanUtils.copyProperties(userVo, userInfo);
+        BeanUtils.copyProperties(userVo, user);
         user.setOpenId(userVo.getOpenId());
-        user.setUserInfo(userInfo);
 
         return mongoTemplate.insert(user);
     }

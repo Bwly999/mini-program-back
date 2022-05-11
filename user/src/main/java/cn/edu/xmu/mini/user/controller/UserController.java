@@ -53,7 +53,7 @@ public class UserController {
 
 
     public String creatToken(User user) {
-        return jwtHelper.createToken(user.getOpenId(), user.getUserInfo().getNickName(), 0L, 0, 3 * 24 * 60 * 60);
+        return jwtHelper.createToken(user.getOpenId(), user.getNickName(), 0L, 0, 3 * 24 * 60 * 60);
     }
 
     /**

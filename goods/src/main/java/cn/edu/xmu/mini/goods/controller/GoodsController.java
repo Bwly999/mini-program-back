@@ -34,7 +34,12 @@ public class GoodsController {
         Page<Goods> goodsPage = goodsService.getGoodsUsePage(page, pageSize);
         return Common.decorateReturnObject(new ReturnObject(goodsPage));
     }
+    //商品评价
+    @GetMapping("/goodscomment/{goodsId}")
+    public Object getGoodsByShopId(@PathVariable String goodsId) {
 
+        return Common.decorateReturnObject(new ReturnObject(goodsPage));
+    }
     // 商家api
     @GetMapping("/shopId/{shopId}")
     public Object getGoodsByShopId(@PathVariable String shopId,

@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -47,4 +48,16 @@ public class Goods {
      * 所属商铺Id
      */
     private String shopId;
+
+    private List<Comment> commentList;
+
+    @Data
+    public static class Comment {
+        private String userId;
+        private String avatarUrl;
+        private String nickName;
+        private Integer rate;
+        private LocalDateTime createTime;
+        private String content;
+    }
 }

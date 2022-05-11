@@ -16,14 +16,12 @@ public class User {
     @Indexed
     private String openId;
 
-    private UserInfo userInfo;
-
-    @Data
-    public static class UserInfo {
-        private String avatarUrl;
-        private String city;
-        private Integer gender;
-        private String nickName;
-        private String province;
-    }
+    /**
+     * 用户信息
+     */
+    private String avatarUrl;
+    private String city;
+    private Integer gender;
+    private String nickName;
+    private String province;
 }
