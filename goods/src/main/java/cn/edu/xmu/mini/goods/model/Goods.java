@@ -21,6 +21,8 @@ public class Goods {
      */
     private Integer price;
     private Integer discountPrice;
+
+    private String category;
     /**
      * 库存
      */
