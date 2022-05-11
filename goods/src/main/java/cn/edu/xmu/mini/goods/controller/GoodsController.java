@@ -8,7 +8,6 @@ import cn.edu.xmu.mini.goods.model.Goods;
 import cn.edu.xmu.mini.goods.model.GoodsVo;
 import cn.edu.xmu.mini.goods.service.GoodsService;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.validation.annotation.Validated;
@@ -27,6 +26,7 @@ public class GoodsController {
     @Autowired
     private StorageUtil storageUtil;
 
+    // 用户api
     @GetMapping("/")
     public Object getGoods(@RequestParam(defaultValue = "1") @Min(1) Integer page,
                            @RequestParam(defaultValue = "10") Integer pageSize) {
@@ -35,6 +35,15 @@ public class GoodsController {
         return Common.decorateReturnObject(new ReturnObject(goodsPage));
     }
 
+    // 商家api
+    @GetMapping("/shopId/{shopId}")
+    public Object getGoodsByShopId(@PathVariable String shopId,
+                                   @RequestParam(defaultValue = "1") @Min(1) Integer page,
+                                   @RequestParam(defaultValue = "10") Integer pageSize) {
+
+        Page<Goods> goodsPage = goodsService.getGoodsByShopId(shopId, page, pageSize);
+        return Common.decorateReturnObject(new ReturnObject(goodsPage));
+    }
     @PostMapping("/")
     public Object addGoods(@RequestBody GoodsVo goodsVo) {
         Goods goods = goodsService.saveGoods(goodsVo);
@@ -44,8 +53,7 @@ public class GoodsController {
 
     @PostMapping("/img")
     @ApiOperation(value = "文件上传")
-    public Object uploadImage(
-            @ApiParam("文件")  @RequestParam(value = "file") MultipartFile file) throws Exception {
+    public Object uploadImage(@RequestParam(value = "file") MultipartFile file) throws Exception {
         try {
             if (file == null) {
                 return Common.decorateReturnObject(new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST));

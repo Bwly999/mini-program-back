@@ -5,6 +5,7 @@ import cn.edu.xmu.mini.goods.model.Goods;
 import cn.edu.xmu.mini.goods.model.GoodsVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -25,14 +26,14 @@ public class GoodsService {
     public Goods saveGoods(GoodsVo goodsVo) {
         Goods goods = new Goods();
         BeanUtils.copyProperties(goodsVo, goods);
-        Goods.GoodsDetail goodsDetail = Goods.GoodsDetail.builder()
-                                                .originPlace(goodsVo.getOriginPlace())
-                                                .level(goodsVo.getLevel())
-                                                .weight(goodsVo.getWeight())
-                                                .desc(goodsVo.getDesc())
-                                                .build();
-        goods.setDetail(goodsDetail);
 
         return goodsDao.insert(goods);
+    }
+
+    public Page<Goods> getGoodsByShopId(String shopId, Integer page, Integer pageSize) {
+        Goods goods = Goods.builder()
+                .shopId(shopId).build();
+
+        return goodsDao.findAll(Example.of(goods), PageRequest.of(page, pageSize));
     }
 }

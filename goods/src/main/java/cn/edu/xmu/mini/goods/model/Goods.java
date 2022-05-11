@@ -2,11 +2,14 @@ package cn.edu.xmu.mini.goods.model;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import java.util.List;
 
 @Data
+@Builder
+@NoArgsConstructor
 public class Goods {
     @MongoId
     private String id;
@@ -18,29 +21,30 @@ public class Goods {
     private Integer price;
     private Integer discountPrice;
     /**
+     * 库存
+     */
+    private Integer stock;
+    /**
      * 详细描述图片url列表
      */
     private List<String> descImgUrlList;
 
-    private GoodsDetail detail;
+    private String originPlace;
+    /**
+     * 等级
+     */
+    private String level;
+    /**
+     * 重量 单位 斤
+     */
+    private Integer weight;
+    /**
+     * 描述
+     */
+    private String desc;
 
     /**
      * 所属商铺Id
      */
     private String shopId;
-
-    @Data
-    @Builder
-    public static class GoodsDetail {
-        private String originPlace;
-        /**
-         * 等级
-         */
-        private String level;
-        private Integer weight;
-        /**
-         * 描述
-         */
-        private String desc;
-    }
 }
