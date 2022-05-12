@@ -5,12 +5,10 @@ import cn.edu.xmu.mini.goods.model.CommentVo;
 import cn.edu.xmu.mini.goods.model.Goods;
 import cn.edu.xmu.mini.goods.model.GoodsVo;
 import com.google.common.collect.ImmutableList;
+import io.swagger.models.auth.In;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.*;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -37,16 +35,23 @@ public class GoodsService {
     }
 
 
-    public Page<Goods> getGoods(String name, String category, Integer page, Integer pageSize) {
-        Goods goods = Goods.builder()
-                    .name(name)
-                    .category(category)
-                    .build();
+    public Page<Goods> getGoods(String name, String category, Integer priceLeft,Integer priceRight, Integer page, Integer pageSize) {
+        Query query = new Query();
+        if (name != null) {
+            query.addCriteria(Criteria.where("name").regex(String.format("^.*%s.*$", name)));
+        }
+        if (category != null) {
+            query.addCriteria(Criteria.where("category").is(category));
+        }
+        if (priceLeft != null && priceRight != null && priceLeft <= priceRight) {
+            query.addCriteria(Criteria.where("price").gte(priceLeft).lte(priceRight));
+        }
 
-        ExampleMatcher matcher = ExampleMatcher.matching()
-                                .withMatcher("name", matcher1 -> matcher1.stringMatcher(ExampleMatcher.StringMatcher.REGEX));
+        long total = mongoTemplate.count(query, Goods.class);
+        PageRequest pageRequest = PageRequest.of(page, pageSize);
+        List<Goods> goodsList = mongoTemplate.find(query.with(pageRequest), Goods.class);
 
-        return goodsDao.findAll(Example.of(goods, matcher), PageRequest.of(page, pageSize));
+        return new PageImpl<>(goodsList, pageRequest, total);
     }
 
     public List<Goods> getGoodsByName() {
@@ -56,7 +61,7 @@ public class GoodsService {
     public Goods saveGoods(GoodsVo goodsVo) {
         Goods goods = new Goods();
         BeanUtils.copyProperties(goodsVo, goods);
-
+        goods.setState(0);
         return goodsDao.insert(goods);
     }
 
