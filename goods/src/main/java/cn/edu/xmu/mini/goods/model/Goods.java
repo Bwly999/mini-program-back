@@ -16,6 +16,27 @@ public class Goods {
     private String id;
     private String name;
     private String coverImgUrl;
+
+    /**
+     * 1 上架
+     * 0 下架
+     */
+    private Integer state;
+
+    /**
+     * 商品视频
+     */
+    private String videoUrl;
+
+    /**
+     * 视频后面的滑动图片
+     */
+    private List<String> scollImages;
+    /**
+     * 月销量
+     */
+    private Integer monthSale;
+
     /**
      * 价格 单位为分
      */
@@ -30,7 +51,7 @@ public class Goods {
     /**
      * 详细描述图片url列表
      */
-    private List<String> descImgUrlList;
+    private List<String> detailImgUrlList;
 
     private String originPlace;
     /**
@@ -52,6 +73,7 @@ public class Goods {
     private String shopId;
 
     private List<Comment> commentList;
+
 
     @Data
     public static class Comment {
