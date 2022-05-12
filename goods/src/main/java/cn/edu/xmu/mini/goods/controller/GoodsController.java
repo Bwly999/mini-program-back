@@ -5,10 +5,13 @@ import cn.edu.xmu.mini.core.util.ReturnNo;
 import cn.edu.xmu.mini.core.util.ReturnObject;
 import cn.edu.xmu.mini.core.util.storage.StorageUtil;
 import cn.edu.xmu.mini.goods.dao.GoodsDao;
+import cn.edu.xmu.mini.goods.model.ChangeStockVo;
 import cn.edu.xmu.mini.goods.model.CommentVo;
 import cn.edu.xmu.mini.goods.model.Goods;
 import cn.edu.xmu.mini.goods.model.GoodsVo;
 import cn.edu.xmu.mini.goods.service.GoodsService;
+import cn.edu.xmu.mini.orders.model.GenerateOrderVo;
+import cn.edu.xmu.mini.orders.model.Orders;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -41,6 +44,17 @@ public class GoodsController {
 
     @Autowired
     private GoodsDao goodsDao;
+
+    //修改库存
+    @PostMapping("/changestock/{goodsId}")
+    public Object changestock(@PathVariable String goodsId,@RequestBody ChangeStockVo changeStockVo) {
+        Criteria criteria = Criteria.where("id").is(goodsId);
+        Update update = new Update().set("stock",changeStockVo);
+        mongoTemplate.updateFirst(new Query(criteria), update, Orders.class);
+
+        return Common.decorateReturnObject(new ReturnObject());
+    }
+
     // 用户api
     //根据名称查询商品
     @GetMapping("/")
