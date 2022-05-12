@@ -96,7 +96,7 @@ public class OrdersController {
             return List.of();
         }
         Criteria criteria1 = Criteria.where("id").is(goodsId);
-        Update update1 = new Update().set("monthSale",goods.get().getMonthSale());
+        Update update1 = new Update().set("monthSale",goods.get().getMonthSale()).set("stock",goods.get().getStock()-1);
         mongoTemplate.updateFirst(new Query(criteria1), update1, Goods.class);
 
         return Common.decorateReturnObject(new ReturnObject());
