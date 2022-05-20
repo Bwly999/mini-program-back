@@ -17,6 +17,8 @@ public class Goods {
     private String name;
     private String coverImgUrl;
 
+    private String categoryId;
+
     /**
      * 1 上架
      * 0 下架

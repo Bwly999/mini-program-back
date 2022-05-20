@@ -5,12 +5,8 @@ import cn.edu.xmu.mini.core.util.ReturnNo;
 import cn.edu.xmu.mini.core.util.ReturnObject;
 import cn.edu.xmu.mini.core.util.storage.StorageUtil;
 import cn.edu.xmu.mini.goods.dao.GoodsDao;
-import cn.edu.xmu.mini.goods.model.ChangeStockVo;
-import cn.edu.xmu.mini.goods.model.CommentVo;
-import cn.edu.xmu.mini.goods.model.Goods;
-import cn.edu.xmu.mini.goods.model.GoodsVo;
+import cn.edu.xmu.mini.goods.model.*;
 import cn.edu.xmu.mini.goods.service.GoodsService;
-import cn.edu.xmu.mini.orders.model.GenerateOrderVo;
 import cn.edu.xmu.mini.orders.model.Orders;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Min;
-import javax.websocket.server.PathParam;
 import java.util.List;
 import java.util.Optional;
 
@@ -139,7 +134,7 @@ public class GoodsController {
     }
 
 
-    @PostMapping("/img")
+    @PostMapping("/file")
     @ApiOperation(value = "文件上传")
     public Object uploadImage(@RequestParam(value = "file") MultipartFile file) throws Exception {
         try {
@@ -153,5 +148,12 @@ public class GoodsController {
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
+    }
+
+    @GetMapping("/category")
+    @ApiOperation("获取所有分类")
+    public Object listAllCategory() {
+        List<Category> categoryList = mongoTemplate.findAll(Category.class);
+        return Common.decorateReturnObject(new ReturnObject(categoryList));
     }
 }
