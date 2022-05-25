@@ -6,12 +6,16 @@ import cn.edu.xmu.mini.core.exception.InternalServerException;
 import cn.edu.xmu.mini.core.util.*;
 import cn.edu.xmu.mini.user.config.WeixinConfig;
 import cn.edu.xmu.mini.user.exception.UnAuthenticatedException;
+import cn.edu.xmu.mini.user.model.Address;
 import cn.edu.xmu.mini.user.model.User;
 import cn.edu.xmu.mini.user.model.UserVo;
 import cn.edu.xmu.mini.user.model.weixin.Session;
 import cn.edu.xmu.mini.user.service.UserService;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -26,6 +30,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
     private static final String sessionUrl = "https://api.weixin.qq.com/sns/jscode2session?appid={appid}&secret={secret}&js_code={js_code}&grant_type=authorization_code";
 
@@ -86,4 +93,15 @@ public class UserController {
 
 //    @PostMapping("/user")
 
+    /**
+     * 增加用户地址
+     */
+    @PostMapping("/address")
+    @Audit
+    public Object saveAddress(@RequestBody Address address, @LoginUser String userId) {
+        Criteria criteria = Criteria.where("id").is(userId);
+        Update update = new Update().addToSet("addressList", address);
+        mongoTemplate.updateFirst(new Query(criteria), update, User.class);
+        return Common.decorateReturnObject(new ReturnObject());
+    }
 }

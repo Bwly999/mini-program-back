@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 @Slf4j
-public class UserControllerAdvice {
+public class GlobalExecptionHandler {
     @ExceptionHandler(value = UnAuthenticatedException.class)
     public Object handleUnAuthException(Exception e) {
         log.error(e.getStackTrace()[0] + "\n" + e.getMessage());

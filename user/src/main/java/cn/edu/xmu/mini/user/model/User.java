@@ -5,6 +5,8 @@ import lombok.experimental.Accessors;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
+import java.util.List;
+
 @Data
 @Accessors(chain = true)
 public class User {
@@ -24,4 +26,9 @@ public class User {
     private Integer gender;
     private String nickName;
     private String province;
+
+    /**
+     * 用户地址
+     */
+    private List<Address> addressList;
 }
