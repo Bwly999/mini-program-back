@@ -17,7 +17,7 @@ public class AdminVo {
     private String password;
 
     @NotNull
-    @Pattern(regexp = "1\\d{10}", message = "手机号格式不正常")
+    @Pattern(regexp = "1\\d{10}", message = "手机号格式不正确")
     private String phone;
 
     @NotBlank

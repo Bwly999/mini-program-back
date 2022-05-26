@@ -1,8 +1,8 @@
 package cn.edu.xmu.mini.gateway.globalfilter;
 
 
-import cn.edu.xmu.wishes.core.util.JacksonUtil;
-import cn.edu.xmu.wishes.core.util.JwtHelper;
+import cn.edu.xmu.mini.core.util.JacksonUtil;
+import cn.edu.xmu.mini.core.util.JwtHelper;
 import cn.edu.xmu.mini.gateway.model.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,12 +13,9 @@ import org.springframework.core.Ordered;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
-import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.UUID;

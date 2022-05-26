@@ -1,4 +1,24 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+server:
+  port: 8081
+  tomcat:
+    threads:
+      max: 500
+
 spring:
+  main:
+    allow-bean-definition-overriding: true
+  application:
+    name: user-service
+  servlet:
+    multipart:
+      enabled: true
+      max-request-size: 10MB
   data:
     mongodb:
       host: 127.0.0.1

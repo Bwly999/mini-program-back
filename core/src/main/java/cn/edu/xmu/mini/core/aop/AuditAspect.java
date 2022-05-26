@@ -1,8 +1,6 @@
 package cn.edu.xmu.mini.core.aop;
 
-import cn.edu.xmu.mini.core.util.JwtHelper;
-import cn.edu.xmu.mini.core.util.ResponseUtil;
-import cn.edu.xmu.mini.core.util.ReturnNo;
+import cn.edu.xmu.mini.core.util.*;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -20,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.util.Date;
 
 /**
  * @auther mingqiu
@@ -76,60 +75,11 @@ public class AuditAspect {
             userLevel=userAndDepart.getUserLevel();
         }
 
-        //检验/shop的api中传入token是否和departId一致
-        String pathInfo = userAndDepart == null ? null : request.getRequestURI();
-        String departName=null;
-        Audit AuditAnnotation = method.getAnnotation(Audit.class);
-        if(AuditAnnotation!=null){
-            departName = ((Audit) AuditAnnotation).departName();
+        assert userAndDepart != null;
+        if (userAndDepart.getExpTime().before(new Date())) {
+            return Common.decorateReturnObject(new ReturnObject(ReturnNo.AUTH_JWT_EXPIRED));
         }
 
-        boolean flag=false;
-        if(null!=pathInfo) {
-            if(!"".equals(departName)) {
-                logger.debug(String.format(LOG,"around","getPathInfo = " + pathInfo));
-                String paths[] = pathInfo.split("/");
-                for (int i = 0; i < paths.length; i++) {
-                    //如果departId为0,可以操作所有的depart
-                    if (departId == 0) {
-                        flag = true;
-                        break;
-                    }
-                    if (paths[i].equals(departName)) {
-                        if (i + 1 < paths.length) {
-                            //找到路径上对应id 将其与string类型的departId比较
-                            String pathId = paths[i + 1];
-                            logger.debug(String.format(LOG,"around","did =" + pathId));
-                            if (!pathId.equals(departId.toString())) {
-                                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                                logger.info(String.format(LOG,"around", "不匹配departId = "+departId));
-                                return ResponseUtil.fail(ReturnNo.RESOURCE_ID_OUTSCOPE);
-                            } else {
-                                flag = true;
-                                logger.debug(String.format(LOG,"around","success match Id!"));
-                            }
-                        }
-                        else {
-                            flag = true;//这是没有departId的情况
-                            break;
-                        }
-                    }
-                }
-                if (flag == false) {
-                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                    logger.info(String.format(LOG,"around", "不匹配departId = "+departId));
-                    return ResponseUtil.fail(ReturnNo.RESOURCE_ID_OUTSCOPE);
-                }
-            }
-            else {
-                departId=null;
-            }
-        }
-        else{
-            logger.error(String.format(LOG,"around","the api path is null"));
-        }
-
-        logger.debug("around: userId ="+userId+" departId="+departId);
         if (userId == null) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             logger.info(String.format(LOG,"around", "userId is null"));
@@ -139,12 +89,10 @@ public class AuditAspect {
         Object[] args = joinPoint.getArgs();
         Annotation[][] annotations = method.getParameterAnnotations();
         for (int i = 0; i < annotations.length; i++) {
-            Object param = args[i];
             Annotation[] paramAnn = annotations[i];
             if (paramAnn.length == 0){
                 continue;
             }
-
             for (Annotation annotation : paramAnn) {
                 //这里判断当前注解是否为LoginUser.class
                 if (annotation.annotationType().equals(LoginUser.class)) {

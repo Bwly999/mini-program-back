@@ -1,5 +1,6 @@
 package cn.edu.xmu.mini.user.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,7 @@ import javax.validation.constraints.Pattern;
 @Accessors(chain = true)
 @Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class Admin {
     @MongoId
     private String id;

@@ -1,11 +1,11 @@
 server:
-  port: 8080
+  port: 8081
 
 spring:
   main:
     allow-bean-definition-overriding: true
   application:
-    name: gateway-service
+    name: user-service
   cloud:
     nacos:
       discovery:

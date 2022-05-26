@@ -1,0 +1,54 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  application:
+    name: gateway-service
+  #  cloud:
+  #    nacos:
+  #      discovery:
+  #        server-addr: 172.16.4.136
+  cloud:
+    gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedHeaders: "*"
+            allowedMethods: "*"
+      default-filters:
+        - DedupeResponseHeader=Vary Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_FIRST
+      discovery:
+        locator:
+          enabled: true # 启用服务发现
+          lower-case-service-id: true
+      routes:
+        - id: 用户中心
+          uri: lb://user-service
+          predicates:
+            - Path=/user/**, /admin/**
+          filters:
+            - RewritePath=/user/?(?<segment>.*), /$\{segment}
+
+        - id: 商品中心
+          uri: lb://goods-service
+          predicates:
+            - Path=/goods/**
+          filters:
+            - RewritePath=/task/?(?<segment>.*), /$\{segment}
+
+  redis:
+    database: 0
+    lettuce:
+      pool:
+        max-active: 100
+        max-idle: 100
+        min-idle: 0
+        max-wait: -1
+    timeout: 5000
+    host: 127.0.0.1
