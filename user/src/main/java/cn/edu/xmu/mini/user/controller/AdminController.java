@@ -1,6 +1,7 @@
 package cn.edu.xmu.mini.user.controller;
 
 import cn.edu.xmu.mini.core.aop.Audit;
+import cn.edu.xmu.mini.core.aop.LoginUser;
 import cn.edu.xmu.mini.core.util.Common;
 import cn.edu.xmu.mini.core.util.JwtHelper;
 import cn.edu.xmu.mini.core.util.ReturnNo;
@@ -73,9 +74,8 @@ public class AdminController {
 
     @GetMapping("/info")
     @Audit
-    public Object getAdminInfo() {
-        Criteria criteria = Criteria.where("username").is(loginVo.getUsername()).and("password").is(loginVo.getPassword());
-        Admin admin = mongoTemplate.findOne(new Query(criteria), Admin.class);
+    public Object getAdminInfo(@LoginUser Long userId) {
+        Admin admin = mongoTemplate.f(new Query(criteria), Admin.class);
         if (admin == null) {
             return Common.decorateReturnObject(new ReturnObject(ReturnNo.CUSTOMER_INVALID_ACCOUNT));
         }

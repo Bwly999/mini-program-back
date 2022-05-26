@@ -35,13 +35,13 @@ public class JwtHelper {
     public static final String LOGIN_TOKEN_KEY = "authorization";
 
     public class UserAndDepart{
-        private Long userId;
+        private String userId;
         private String userName;
         private Long departId;
         private Date expireTime;
         private Integer userLevel;
 
-        public UserAndDepart(long userId, String userName,long departId,Integer userLevel,Date expireTime){
+        public UserAndDepart(String userId, String userName,long departId,Integer userLevel,Date expireTime){
             this.userId = userId;
             this.userName=userName;
             this.departId = departId;
@@ -49,7 +49,7 @@ public class JwtHelper {
             this.userLevel = userLevel;
         }
 
-        public Long getUserId() {
+        public String getUserId() {
             return userId;
         }
 
@@ -137,7 +137,7 @@ public class JwtHelper {
             Claim claimUserName = claims.get("userName");
             Claim claimUserLevel = claims.get("userLevel");
             Claim expireTime=claims.get("exp");
-            return new UserAndDepart(claimUserId.asLong(),claimUserName.asString() ,claimDepartId.asLong(),claimUserLevel.asInt(),expireTime.asDate());
+            return new UserAndDepart(claimUserId.asString(),claimUserName.asString() ,claimDepartId.asLong(),claimUserLevel.asInt(),expireTime.asDate());
         } catch (JWTVerificationException exception) {
             return null;
         }

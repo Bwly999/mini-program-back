@@ -64,7 +64,7 @@ public class AuditAspect {
         }
 
         JwtHelper.UserAndDepart userAndDepart = new JwtHelper().verifyTokenAndGetClaims(token);
-        Long userId = null;
+        String userId = null;
         Long departId = null;
         String userName=null;
         Integer userLevel=null;

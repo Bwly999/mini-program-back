@@ -72,7 +72,7 @@ public class LogGlobalFilter implements GlobalFilter, Ordered {
                 String token =  exchange.getRequest().getHeaders().getFirst("authorization");
                 JwtHelper.UserAndDepart u = jwtHelper.verifyTokenAndGetClaims(token);
                 if(u == null){
-                    log.setUserId(-1L);
+                    log.setUserId("null");
                     log.setDepartId(-1L);
                 } else {
                     log.setUserId(u.getUserId());
@@ -108,7 +108,7 @@ public class LogGlobalFilter implements GlobalFilter, Ordered {
         Log log = new Log();
         privilegeId = privilegeId == null ? -1 : privilegeId; // 如果Redis中没有关于此URL的记录则赋值-1
         if(u == null){
-            log.setUserId(-1L);
+            log.setUserId("null");
             log.setDepartId(-1L);
         } else {
             log.setUserId(u.getUserId());

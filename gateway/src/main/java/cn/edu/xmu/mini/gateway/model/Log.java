@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 @Data
 public class Log {
     private Long id;
-    private Long userId;
+    private String userId;
     private Long departId;
     private String ip;
     private String desc;
