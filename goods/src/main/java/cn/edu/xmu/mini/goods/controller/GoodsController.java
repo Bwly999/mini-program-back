@@ -4,12 +4,17 @@ import cn.edu.xmu.mini.core.util.Common;
 import cn.edu.xmu.mini.core.util.ReturnNo;
 import cn.edu.xmu.mini.core.util.ReturnObject;
 import cn.edu.xmu.mini.core.util.storage.StorageUtil;
+import cn.edu.xmu.mini.goods.config.CategoryProperty;
 import cn.edu.xmu.mini.goods.dao.GoodsDao;
-import cn.edu.xmu.mini.goods.model.*;
+import cn.edu.xmu.mini.goods.model.ChangeStockVo;
+import cn.edu.xmu.mini.goods.model.CommentVo;
+import cn.edu.xmu.mini.goods.model.Goods;
+import cn.edu.xmu.mini.goods.model.GoodsVo;
 import cn.edu.xmu.mini.goods.service.GoodsService;
 import cn.edu.xmu.mini.orders.model.Orders;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -40,6 +45,9 @@ public class GoodsController {
     @Autowired
     private GoodsDao goodsDao;
 
+    @Autowired
+    private CategoryProperty categoryProperty;
+
     //修改库存
     @PostMapping("/changestock/{goodsId}")
     public Object changestock(@PathVariable String goodsId,@RequestBody ChangeStockVo changeStockVo) {
@@ -52,7 +60,7 @@ public class GoodsController {
 
     // 用户api
     //根据名称查询商品
-    @GetMapping("/")
+    @GetMapping("")
     public Object getGoods(@RequestParam String name, @RequestParam String category,@RequestParam Integer lowPrice, @RequestParam Integer highPrice,
                                  @RequestParam(defaultValue = "1") @Min(1) Integer page,
                                  @RequestParam(defaultValue = "10") Integer pageSize) {
@@ -127,12 +135,14 @@ public class GoodsController {
         Page<Goods> goodsPage = goodsService.getGoodsByShopId(shopId, page, pageSize);
         return Common.decorateReturnObject(new ReturnObject(goodsPage));
     }
-    @PostMapping("/")
+    @PostMapping("")
     public Object addGoods(@RequestBody GoodsVo goodsVo) {
         Goods goods = goodsService.saveGoods(goodsVo);
         return Common.decorateReturnObject(new ReturnObject(goods));
     }
 
+    @Value("${wishes.storage.webdav.replaceStr}")
+    private String replaceStr;
 
     @PostMapping("/file")
     @ApiOperation(value = "文件上传")
@@ -144,6 +154,7 @@ public class GoodsController {
             String suffix = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".") + 1);
 
             String path = storageUtil.store(file.getInputStream(), suffix);
+            path = path.replace(replaceStr, "");
             return Common.decorateReturnObject(new ReturnObject(path));
         } catch (Exception e) {
             throw new Exception(e.getMessage());
@@ -153,7 +164,7 @@ public class GoodsController {
     @GetMapping("/category")
     @ApiOperation("获取所有分类")
     public Object listAllCategory() {
-        List<Category> categoryList = mongoTemplate.findAll(Category.class);
-        return Common.decorateReturnObject(new ReturnObject(categoryList));
+//        List<Category> categoryList = mongoTemplate.findAll(Category.class);
+        return Common.decorateReturnObject(new ReturnObject(categoryProperty.getCategoryList()));
     }
 }

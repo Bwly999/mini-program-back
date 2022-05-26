@@ -1,9 +1,10 @@
 package cn.edu.xmu.mini.goods.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.mongodb.core.mapping.MongoId;
+import org.springframework.data.annotation.Id;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -11,13 +12,14 @@ import java.util.List;
 @Data
 @Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class Goods {
-    @MongoId
+    @Id
     private String id;
     private String name;
     private String coverImgUrl;
 
-    private String categoryId;
+    private String category;
 
     /**
      * 1 上架
@@ -45,7 +47,6 @@ public class Goods {
     private Integer price;
     private Integer discountPrice;
 
-    private String category;
     /**
      * 库存
      */
@@ -70,7 +71,7 @@ public class Goods {
     private String desc;
 
     /**
-     * 所属商铺Id
+     * 所属商铺Id, 默认商铺Id为对应admin的Id
      */
     private String shopId;
 

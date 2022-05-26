@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Data
@@ -12,11 +13,15 @@ public class GoodsVo {
     private String name;
 
     @NotBlank
+    private String category;
+
+    @NotBlank
     private String coverImgUrl;
     /**
      * 价格 单位为分
      */
     @Min(0)
+    @NotNull
     private Integer price;
 
     @Min(0)
@@ -25,6 +30,8 @@ public class GoodsVo {
      * 详细描述图片url列表
      */
     private List<String> descImgUrlList;
+
+    private Integer stock;
 
     private String originPlace;
     /**

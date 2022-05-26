@@ -1,6 +1,9 @@
 package cn.edu.xmu.mini.core.util.storage.config;
 
-import cn.edu.xmu.mini.core.util.storage.*;
+import cn.edu.xmu.mini.core.util.storage.LocalStorage;
+import cn.edu.xmu.mini.core.util.storage.Storage;
+import cn.edu.xmu.mini.core.util.storage.StorageUtil;
+import cn.edu.xmu.mini.core.util.storage.WebDavStorage;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -49,12 +52,7 @@ public class StorageAutoConfiguration {
     @Bean
     @ConditionalOnProperty(prefix = "wishes.storage", name = "active", havingValue = "webdav")
     public WebDavStorage webDavStorage() {
-        WebDavStorage webDavStorage = new WebDavStorage();
         StorageProperties.Webdav webdav = this.properties.getWebdav();
-        webDavStorage.setUrl(webdav.getUrl());
-        webDavStorage.setDirectory(webdav.getDirectory());
-        webDavStorage.setUsername(webdav.getUsername());
-        webDavStorage.setPassword(webdav.getPassword());
-        return webDavStorage;
+        return new WebDavStorage(webdav.getUrl(), webdav.getDirectory(), webdav.getUsername(), webdav.getPassword());
     }
 }

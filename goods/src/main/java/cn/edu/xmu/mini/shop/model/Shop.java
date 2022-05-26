@@ -1,15 +1,20 @@
 package cn.edu.xmu.mini.shop.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.mongodb.core.mapping.MongoId;
+import org.springframework.data.annotation.Id;
+
 @Builder
 @NoArgsConstructor
+@AllArgsConstructor
+@Data
 public class Shop {
     /**
      * 商铺id
      */
-    @MongoId
+    @Id
     private String id;
     /**
      * 商铺名称

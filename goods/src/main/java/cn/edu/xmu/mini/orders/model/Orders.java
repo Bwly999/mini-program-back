@@ -1,18 +1,20 @@
 package cn.edu.xmu.mini.orders.model;
 
 import cn.edu.xmu.mini.goods.model.Goods;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.mongodb.core.mapping.MongoId;
+import org.springframework.data.annotation.Id;
 @Builder
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class Orders {
     /**
      * 订单id
      */
-    @MongoId
+    @Id
     private String id;
 
     /**

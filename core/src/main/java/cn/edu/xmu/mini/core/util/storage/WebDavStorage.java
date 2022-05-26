@@ -19,12 +19,19 @@ public class WebDavStorage implements Storage {
     private String directory;
     private String username;
     private String password;
+
+    public WebDavStorage(String url, String directory, String username, String password) {
+        this.url = url;
+        this.directory = directory;
+        this.username = username;
+        this.password = password;
+    }
+
     @Override
     public String store(InputStream inputStream, long contentLength, String contentType, String keyName) {
         try {
-            Sardine sardine = SardineFactory.begin(username, password);
-            StringBuilder stringBuilder = new StringBuilder(url);
 
+            Sardine sardine = SardineFactory.begin(username, password);
             String baseUrl = url + directory + "/";
 
             //没有权限创建则抛出IOException

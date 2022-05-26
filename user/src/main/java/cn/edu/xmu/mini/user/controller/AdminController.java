@@ -74,12 +74,11 @@ public class AdminController {
 
     @GetMapping("/info")
     @Audit
-    public Object getAdminInfo(@LoginUser Long userId) {
-        Admin admin = mongoTemplate.f(new Query(criteria), Admin.class);
+    public Object getAdminInfo(@LoginUser String userId) {
+        Admin admin = mongoTemplate.findById(userId, Admin.class);
         if (admin == null) {
-            return Common.decorateReturnObject(new ReturnObject(ReturnNo.CUSTOMER_INVALID_ACCOUNT));
+            return Common.decorateReturnObject(new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST));
         }
-        String token = creatToken(admin);
-        return Common.decorateReturnObject(new ReturnObject(token));
+        return Common.decorateReturnObject(new ReturnObject(admin));
     }
 }

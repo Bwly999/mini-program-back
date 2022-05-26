@@ -13,6 +13,10 @@ spring:
   #    nacos:
   #      discovery:
   #        server-addr: 172.16.4.136
+  autoconfigure:
+    exclude:
+      - cn.edu.xmu.mini.core.config.CorsConfig
+      - cn.edu.xmu.mini.core.config.SwaggerConfig
   cloud:
     gateway:
       globalcors:
@@ -40,7 +44,7 @@ spring:
           predicates:
             - Path=/goods/**
           filters:
-            - RewritePath=/task/?(?<segment>.*), /$\{segment}
+            - RewritePath=/goods/?(?<segment>.*), /$\{segment}
 
   redis:
     database: 0

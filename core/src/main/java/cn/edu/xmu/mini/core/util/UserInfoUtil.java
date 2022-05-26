@@ -12,14 +12,14 @@ import java.net.URLDecoder;
 
 @Slf4j
 public class UserInfoUtil {
-    public static Long getUserId() {
+    public static String getUserId() {
         try {
             HttpServletRequest httpServletRequest = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
             String payload = httpServletRequest.getHeader(SecurityConstants.JWT_PAYLOAD_KEY);
             Assert.notNull(payload, "http header not exist jwt payload");
 
             String decodePayload = URLDecoder.decode(payload, "UTF-8");
-            Long userId = JacksonUtil.parseObject(decodePayload, "userId", Long.class);
+            String userId = JacksonUtil.parseObject(decodePayload, "userId", String.class);
             return userId;
         } catch (UnsupportedEncodingException | NullPointerException e) {
             log.error("UserInfoUtil getUserId:" + e.getMessage());

@@ -2,15 +2,15 @@ package cn.edu.xmu.mini.user.model;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import java.util.List;
 
 @Data
 @Accessors(chain = true)
 public class User {
-    @MongoId
+    @Id
     private String id;
     /**
      * 小程序用户唯一标识
