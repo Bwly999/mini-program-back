@@ -1,6 +1,7 @@
 package cn.edu.xmu.mini.goods.controller;
 
 import cn.edu.xmu.mini.core.util.Common;
+import cn.edu.xmu.mini.core.util.MongoUtils;
 import cn.edu.xmu.mini.core.util.ReturnNo;
 import cn.edu.xmu.mini.core.util.ReturnObject;
 import cn.edu.xmu.mini.core.util.storage.StorageUtil;
@@ -12,6 +13,7 @@ import cn.edu.xmu.mini.goods.model.Goods;
 import cn.edu.xmu.mini.goods.model.GoodsVo;
 import cn.edu.xmu.mini.goods.service.GoodsService;
 import cn.edu.xmu.mini.orders.model.Orders;
+import com.mongodb.client.result.UpdateResult;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,6 +26,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import java.util.List;
 import java.util.Optional;
@@ -61,21 +64,16 @@ public class GoodsController {
     // 用户api
     //根据名称查询商品
     @GetMapping("")
-    public Object getGoods(@RequestParam String name, @RequestParam String category,@RequestParam Integer lowPrice, @RequestParam Integer highPrice,
-                                 @RequestParam(defaultValue = "1") @Min(1) Integer page,
-                                 @RequestParam(defaultValue = "10") Integer pageSize) {
+    public Object getGoods(@RequestParam(required = false) String name,
+                           @RequestParam(required = false) String category,
+                           @RequestParam(required = false) Integer lowPrice,
+                           @RequestParam(required = false) Integer highPrice,
+                           @RequestParam(defaultValue = "1") @Min(1) Integer page,
+                           @RequestParam(defaultValue = "10") Integer pageSize) {
 
         Page<Goods> goodsPage = goodsService.getGoods(name, category, lowPrice, highPrice, page, pageSize);
         return Common.decorateReturnObject(new ReturnObject(goodsPage));
     }
-//
-//    @GetMapping("/")
-//    public Object getGoods(@RequestParam(defaultValue = "1") @Min(1) Integer page,
-//                           @RequestParam(defaultValue = "10") Integer pageSize) {
-//
-//        Page<Goods> goodsPage = goodsService.getGoodsUsePage(page, pageSize);
-//        return Common.decorateReturnObject(new ReturnObject(goodsPage));
-//    }
 
     /**
      * 上架
@@ -107,11 +105,29 @@ public class GoodsController {
     public Object getGoodsById(@PathVariable String goodsId) {
 
         Optional<Goods> goods = goodsDao.findById(goodsId);
-        if (goods.isEmpty()) {
-            return List.of();
+        if (!goods.isPresent()) {
+            return Common.decorateReturnObject(new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST));
         }
         return Common.decorateReturnObject(new ReturnObject(goods.get()));
     }
+
+    /**
+     * 修改商品
+     * @param goodsId
+     * @param goodsVo
+     * @return
+     */
+    @PutMapping("/{goodsId}")
+    public Object changeGoods(@PathVariable String goodsId, @Valid @RequestBody GoodsVo goodsVo) {
+        Update update = MongoUtils.getUpdateByObj(goodsVo);
+
+        UpdateResult result = mongoTemplate.updateFirst(new Query(Criteria.where("id").is(goodsId)), update, Goods.class);
+        if (result.getMatchedCount() == 0L) {
+            return Common.decorateReturnObject(new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST));
+        }
+        return Common.decorateReturnObject(new ReturnObject());
+    }
+
     // 查询商品评价
     @GetMapping("/{goodsId}/comment/")
     public Object getGoodsComment(@PathVariable String goodsId) {
@@ -127,18 +143,51 @@ public class GoodsController {
     }
 
     // 商家api
+
+    /**
+     * 查询店铺所有商品
+     * @param shopId
+     * @param page
+     * @param pageSize
+     * @return
+     */
     @GetMapping("/shopId/{shopId}")
     public Object getGoodsByShopId(@PathVariable String shopId,
+                                   @RequestParam(required = false) String name,
+                                   @RequestParam(required = false) String category,
                                    @RequestParam(defaultValue = "1") @Min(1) Integer page,
                                    @RequestParam(defaultValue = "10") Integer pageSize) {
 
-        Page<Goods> goodsPage = goodsService.getGoodsByShopId(shopId, page, pageSize);
+        Page<Goods> goodsPage = goodsService.getGoodsByShopId(shopId, name, category, page, pageSize);
         return Common.decorateReturnObject(new ReturnObject(goodsPage));
     }
+
+    /**
+     * 新增商品
+     * @param goodsVo
+     * @return
+     */
     @PostMapping("")
     public Object addGoods(@RequestBody GoodsVo goodsVo) {
         Goods goods = goodsService.saveGoods(goodsVo);
         return Common.decorateReturnObject(new ReturnObject(goods));
+    }
+
+    /**
+     * 删除商品
+     * @param goodsId 商品Id
+     * @return
+     */
+    @DeleteMapping("/{goodsId}")
+    public Object deleteGoods(@PathVariable String goodsId) {
+        Update update = new Update();
+        update.set("deleted", true);
+
+        UpdateResult result = mongoTemplate.updateFirst(new Query(Criteria.where("id").is(goodsId)), update, Goods.class);
+        if (result.getMatchedCount() == 0L) {
+            return Common.decorateReturnObject(new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST));
+        }
+        return Common.decorateReturnObject(new ReturnObject());
     }
 
     @Value("${wishes.storage.webdav.replaceStr}")

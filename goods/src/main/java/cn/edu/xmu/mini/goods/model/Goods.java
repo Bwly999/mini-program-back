@@ -77,6 +77,8 @@ public class Goods {
 
     private List<Comment> commentList;
 
+    private Boolean deleted;
+
 
     @Data
     public static class Comment {

@@ -4,23 +4,21 @@ import cn.edu.xmu.mini.goods.dao.GoodsDao;
 import cn.edu.xmu.mini.goods.model.CommentVo;
 import cn.edu.xmu.mini.goods.model.Goods;
 import cn.edu.xmu.mini.goods.model.GoodsVo;
-import com.google.common.collect.ImmutableList;
-import io.swagger.models.auth.In;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
-import java.time.LocalDate;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Pattern;
 
 @Service
 public class GoodsService {
@@ -36,9 +34,12 @@ public class GoodsService {
 
 
     public Page<Goods> getGoods(String name, String category, Integer priceLeft,Integer priceRight, Integer page, Integer pageSize) {
+        // 在mongodb里page为0-index
+        page -= 1;
         Query query = new Query();
         if (name != null) {
-            query.addCriteria(Criteria.where("name").regex(String.format("^.*%s.*$", name)));
+//            query.addCriteria(Criteria.where("name").regex(String.format("^.*%s.*$", name)));
+            query.addCriteria(Criteria.where("name").regex(name));
         }
         if (category != null) {
             query.addCriteria(Criteria.where("category").is(category));
@@ -46,16 +47,13 @@ public class GoodsService {
         if (priceLeft != null && priceRight != null && priceLeft <= priceRight) {
             query.addCriteria(Criteria.where("price").gte(priceLeft).lte(priceRight));
         }
+        query.addCriteria(Criteria.where("deleted").exists(false));
 
         long total = mongoTemplate.count(query, Goods.class);
         PageRequest pageRequest = PageRequest.of(page, pageSize);
         List<Goods> goodsList = mongoTemplate.find(query.with(pageRequest), Goods.class);
 
         return new PageImpl<>(goodsList, pageRequest, total);
-    }
-
-    public List<Goods> getGoodsByName() {
-        return goodsDao.findAll();
     }
 
     public Goods saveGoods(GoodsVo goodsVo) {
@@ -65,11 +63,22 @@ public class GoodsService {
         return goodsDao.insert(goods);
     }
 
-    public Page<Goods> getGoodsByShopId(String shopId, Integer page, Integer pageSize) {
-        Goods goods = Goods.builder()
-                .shopId(shopId).build();
+    public Page<Goods> getGoodsByShopId(@NotNull String shopId, String name, String category, Integer page, Integer pageSize) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("shopId").is(shopId));
+        if (name != null) {
+            query.addCriteria(Criteria.where("name").regex(name));
+        }
+        if (category != null) {
+            query.addCriteria(Criteria.where("category").is(category));
+        }
+        query.addCriteria(Criteria.where("deleted").exists(false));
 
-        return goodsDao.findAll(Example.of(goods), PageRequest.of(page, pageSize));
+        long total = mongoTemplate.count(query, Goods.class);
+        PageRequest pageRequest = PageRequest.of(page, pageSize);
+        List<Goods> goodsList = mongoTemplate.find(query.with(pageRequest), Goods.class);
+
+        return new PageImpl<>(goodsList, pageRequest, total);
     }
 
     public List<Goods.Comment> getGoodsComment(String goodsId) {

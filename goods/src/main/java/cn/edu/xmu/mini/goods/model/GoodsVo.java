@@ -17,6 +17,8 @@ public class GoodsVo {
 
     @NotBlank
     private String coverImgUrl;
+
+    private List<String> scollImages;
     /**
      * 价格 单位为分
      */

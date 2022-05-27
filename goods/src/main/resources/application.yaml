@@ -10,6 +10,12 @@ server:
     threads:
       max: 500
 
+logging:
+  level:
+    com:
+      alibaba:
+        nacos: warn
+
 spring:
   main:
     allow-bean-definition-overriding: true
