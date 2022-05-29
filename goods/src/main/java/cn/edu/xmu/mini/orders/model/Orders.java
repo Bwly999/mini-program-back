@@ -30,9 +30,16 @@ public class Orders {
     private Integer isSelf;
 
     /**
+     * 支付方式
+     * 0 微信支付
+     * 1 线下到付，自取
+     */
+    private Integer payWay;
+
+    /**
      * 如果自取则为空
      */
-    private String address;
+    private Address address;
 
 
     /**

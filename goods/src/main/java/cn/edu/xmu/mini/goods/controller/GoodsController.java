@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Min;
 import java.util.List;
 import java.util.Optional;
 
@@ -68,7 +67,7 @@ public class GoodsController {
                            @RequestParam(required = false) String category,
                            @RequestParam(required = false) Integer lowPrice,
                            @RequestParam(required = false) Integer highPrice,
-                           @RequestParam(defaultValue = "1") @Min(1) Integer page,
+                           @RequestParam(defaultValue = "1") Integer page,
                            @RequestParam(defaultValue = "10") Integer pageSize) {
 
         Page<Goods> goodsPage = goodsService.getGoods(name, category, lowPrice, highPrice, page, pageSize);
@@ -155,7 +154,7 @@ public class GoodsController {
     public Object getGoodsByShopId(@PathVariable String shopId,
                                    @RequestParam(required = false) String name,
                                    @RequestParam(required = false) String category,
-                                   @RequestParam(defaultValue = "1") @Min(1) Integer page,
+                                   @RequestParam(defaultValue = "1") Integer page,
                                    @RequestParam(defaultValue = "10") Integer pageSize) {
 
         Page<Goods> goodsPage = goodsService.getGoodsByShopId(shopId, name, category, page, pageSize);

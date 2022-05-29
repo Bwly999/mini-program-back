@@ -1,6 +1,7 @@
 package cn.edu.xmu.mini.orders.controller;
 
 import cn.edu.xmu.mini.core.util.Common;
+import cn.edu.xmu.mini.core.util.ReturnNo;
 import cn.edu.xmu.mini.core.util.ReturnObject;
 import cn.edu.xmu.mini.goods.dao.GoodsDao;
 import cn.edu.xmu.mini.goods.model.Goods;
@@ -17,6 +18,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -63,11 +65,20 @@ public class OrdersController {
     }
 
     //生成订单
-    @PostMapping("/create")
-    public Object create(@RequestBody GenerateOrderVo generateOrderVo) {
+    @PostMapping("")
+    public Object createOrder(@RequestBody @Valid GenerateOrderVo generateOrderVo) {
+        Goods goods = mongoTemplate.findById(generateOrderVo.getGoodsId(), Goods.class);
+        if (goods == null) {
+            return Common.decorateReturnObject(new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST, "商品不存在"));
+        }
+        Integer price = goods.getDiscountPrice() != null ? goods.getDiscountPrice() : goods.getPrice();
+        Integer payAmount = price * generateOrderVo.getPayNumber();
+
         Orders orders = new Orders();
         BeanUtils.copyProperties(generateOrderVo, orders);
         orders.setState(0);
+        orders.setPayAmount(payAmount);
+        orders.setShopId(goods.getShopId());
         Orders order = ordersDao.insert(orders);
         return Common.decorateReturnObject(new ReturnObject(order));
     }

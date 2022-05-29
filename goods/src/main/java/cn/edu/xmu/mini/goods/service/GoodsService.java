@@ -35,7 +35,6 @@ public class GoodsService {
 
     public Page<Goods> getGoods(String name, String category, Integer priceLeft,Integer priceRight, Integer page, Integer pageSize) {
         // 在mongodb里page为0-index
-        page -= 1;
         Query query = new Query();
         if (name != null) {
 //            query.addCriteria(Criteria.where("name").regex(String.format("^.*%s.*$", name)));
