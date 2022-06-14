@@ -75,6 +75,8 @@ public class Goods {
      */
     private String shopId;
 
+    private String shopName;
+
     private List<Comment> commentList;
 
     private Boolean deleted;

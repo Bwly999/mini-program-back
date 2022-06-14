@@ -4,6 +4,9 @@ management:
       exposure:
         include: "*"
 
+server:
+  port: 8080
+
 spring:
   main:
     allow-bean-definition-overriding: true
@@ -33,14 +36,16 @@ spring:
           lower-case-service-id: true
       routes:
         - id: 用户中心
-          uri: lb://user-service
+#          uri: lb://user-service
+          uri: http://127.0.0.1:8081
           predicates:
             - Path=/user/**, /admin/**
           filters:
             - RewritePath=/user/?(?<segment>.*), /$\{segment}
 
         - id: 商品中心
-          uri: lb://goods-service
+#          uri: lb://goods-service
+          uri: http://127.0.0.1:8082
           predicates:
             - Path=/goods/**
           filters:

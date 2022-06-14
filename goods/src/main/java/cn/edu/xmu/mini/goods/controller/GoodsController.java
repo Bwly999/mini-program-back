@@ -7,10 +7,10 @@ import cn.edu.xmu.mini.core.util.ReturnObject;
 import cn.edu.xmu.mini.core.util.storage.StorageUtil;
 import cn.edu.xmu.mini.goods.config.CategoryProperty;
 import cn.edu.xmu.mini.goods.dao.GoodsDao;
-import cn.edu.xmu.mini.goods.model.ChangeStockVo;
-import cn.edu.xmu.mini.goods.model.CommentVo;
 import cn.edu.xmu.mini.goods.model.Goods;
-import cn.edu.xmu.mini.goods.model.GoodsVo;
+import cn.edu.xmu.mini.goods.model.vo.ChangeStockVo;
+import cn.edu.xmu.mini.goods.model.vo.CommentVo;
+import cn.edu.xmu.mini.goods.model.vo.GoodsVo;
 import cn.edu.xmu.mini.goods.service.GoodsService;
 import cn.edu.xmu.mini.orders.model.Orders;
 import com.mongodb.client.result.UpdateResult;
@@ -104,9 +104,16 @@ public class GoodsController {
     public Object getGoodsById(@PathVariable String goodsId) {
 
         Optional<Goods> goods = goodsDao.findById(goodsId);
-        if (!goods.isPresent()) {
+        if (goods.isEmpty()) {
             return Common.decorateReturnObject(new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST));
         }
+        //Todo 加入查询店铺名
+//        GoodsRetVo goodsRetVo = new GoodsRetVo();
+//        BeanUtils.copyProperties(goods.get(), goodsRetVo);
+//
+//        String shopName;
+//        mongoTemplate.findById(goods.get().getShopId(), )
+//        goodsRetVo.setShopName(mongoTemplate.);
         return Common.decorateReturnObject(new ReturnObject(goods.get()));
     }
 

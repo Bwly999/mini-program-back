@@ -1,9 +1,9 @@
 package cn.edu.xmu.mini.goods.service;
 
 import cn.edu.xmu.mini.goods.dao.GoodsDao;
-import cn.edu.xmu.mini.goods.model.CommentVo;
 import cn.edu.xmu.mini.goods.model.Goods;
-import cn.edu.xmu.mini.goods.model.GoodsVo;
+import cn.edu.xmu.mini.goods.model.vo.CommentVo;
+import cn.edu.xmu.mini.goods.model.vo.GoodsVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

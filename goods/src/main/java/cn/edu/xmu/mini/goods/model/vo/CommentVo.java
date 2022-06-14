@@ -1,4 +1,4 @@
-package cn.edu.xmu.mini.goods.model;
+package cn.edu.xmu.mini.goods.model.vo;
 
 import lombok.Data;
 
