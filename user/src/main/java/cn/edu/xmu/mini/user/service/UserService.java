@@ -3,7 +3,6 @@ package cn.edu.xmu.mini.user.service;
 import cn.edu.xmu.mini.user.model.User;
 import cn.edu.xmu.mini.user.model.UserVo;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -11,7 +10,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.ArrayList;
 
 @Service
 public class UserService implements InitializingBean {
@@ -36,6 +35,7 @@ public class UserService implements InitializingBean {
         User user = new User();
         BeanUtils.copyProperties(userVo, user);
         user.setOpenId(userVo.getOpenId());
+        user.setAddressList(new ArrayList<>());
 
         return mongoTemplate.insert(user);
     }

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
 
 import javax.validation.constraints.NotBlank;
 
@@ -12,6 +13,8 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Address {
+    @Id
+    private String id;
     @NotBlank(message = "收货人姓名不能为空")
     private String consignee;
     @NotBlank(message = "收货人电话不能为空")
