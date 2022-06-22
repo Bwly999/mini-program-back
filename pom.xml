@@ -35,11 +35,7 @@
         <module>core</module>
         <module>gateway</module>
         <module>goods</module>
-        <module>pay</module>
-        <module>shop</module>
         <module>news</module>
-        <module>order</module>
-        <module>consult</module>
         <module>user</module>
     </modules>
 

@@ -1,9 +1,0 @@
-cn\edu\xmu\wishes\gateway\globalfilter\LogGlobalFilter$1.class
-cn\edu\xmu\wishes\gateway\localfiter\AuthFilter.class
-cn\edu\xmu\wishes\gateway\localfiter\AuthFilter$1.class
-cn\edu\xmu\wishes\gateway\localfiter\AuthGatewayFilterFactory.class
-cn\edu\xmu\wishes\gateway\localfiter\AuthFilter$Config.class
-cn\edu\xmu\wishes\gateway\model\Log.class
-cn\edu\xmu\wishes\gateway\microservice\PrivilegeService.class
-cn\edu\xmu\wishes\gateway\globalfilter\LogGlobalFilter.class
-cn\edu\xmu\wishes\gateway\localfiter\AuthFilter$RequestType.class

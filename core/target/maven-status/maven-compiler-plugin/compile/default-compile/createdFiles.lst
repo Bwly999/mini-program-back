@@ -8,7 +8,6 @@ cn\edu\xmu\mini\core\aop\UserLevel.class
 cn\edu\xmu\mini\core\aop\Audit.class
 cn\edu\xmu\mini\core\util\storage\StorageUtil.class
 cn\edu\xmu\mini\core\util\InternalReturnObject.class
-cn\edu\xmu\mini\core\config\mybatisplus\FillHandler.class
 cn\edu\xmu\mini\core\util\RedisUtil.class
 cn\edu\xmu\mini\core\config\CacheConfig.class
 cn\edu\xmu\mini\core\util\ResponseUtil.class
@@ -24,7 +23,6 @@ cn\edu\xmu\mini\core\util\ImgHelper.class
 cn\edu\xmu\mini\core\config\CorsConfig.class
 cn\edu\xmu\mini\core\util\storage\WebDavStorage.class
 cn\edu\xmu\mini\core\aop\LoginUser.class
-cn\edu\xmu\mini\core\config\mybatisplus\FillHandler$FillInfo.class
 cn\edu\xmu\mini\core\config\SwaggerConfig.class
 cn\edu\xmu\mini\core\util\ReturnObject.class
 cn\edu\xmu\mini\core\util\storage\Storage.class
@@ -37,7 +35,6 @@ cn\edu\xmu\mini\core\util\storage\config\StorageProperties.class
 cn\edu\xmu\mini\core\util\storage\config\StorageProperties$Local.class
 cn\edu\xmu\mini\core\model\VoObject.class
 cn\edu\xmu\mini\core\config\LoadBalanceConfig.class
-cn\edu\xmu\mini\core\config\mybatisplus\MybatisPlusConfig.class
 cn\edu\xmu\mini\core\util\Common$1.class
 cn\edu\xmu\mini\core\util\Common.class
 cn\edu\xmu\mini\core\util\JacksonUtil$1.class

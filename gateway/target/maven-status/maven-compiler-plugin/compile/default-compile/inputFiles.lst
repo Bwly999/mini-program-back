@@ -1,5 +1,4 @@
-D:\IdeaProjects\wishes\gateway\src\main\java\cn\edu\xmu\wishes\gateway\globalfilter\LogGlobalFilter.java
-D:\IdeaProjects\wishes\gateway\src\main\java\cn\edu\xmu\wishes\gateway\microservice\PrivilegeService.java
-D:\IdeaProjects\wishes\gateway\src\main\java\cn\edu\xmu\wishes\gateway\localfiter\AuthGatewayFilterFactory.java
-D:\IdeaProjects\wishes\gateway\src\main\java\cn\edu\xmu\wishes\gateway\localfiter\AuthFilter.java
-D:\IdeaProjects\wishes\gateway\src\main\java\cn\edu\xmu\wishes\gateway\model\Log.java
+D:\IdeaProjects\mini-program\gateway\src\main\java\cn\edu\xmu\mini\gateway\GatewayApplication.java
+D:\IdeaProjects\mini-program\gateway\src\main\java\cn\edu\xmu\mini\gateway\microservice\PrivilegeService.java
+D:\IdeaProjects\mini-program\gateway\src\main\java\cn\edu\xmu\mini\gateway\globalfilter\LogGlobalFilter.java
+D:\IdeaProjects\mini-program\gateway\src\main\java\cn\edu\xmu\mini\gateway\model\Log.java
