@@ -2,24 +2,15 @@ package cn.edu.xmu.mini.orders.model;
 
 import cn.edu.xmu.mini.goods.model.Goods;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedBy;
 
 import java.time.LocalDateTime;
 
-@Builder
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class Orders {
-    /**
-     * 订单id
-     */
-    @Id
+public class OrderRetVo {
     private String id;
 
     /**
@@ -46,7 +37,6 @@ public class Orders {
      */
     private Address address;
 
-
     /**
      * 购买数量
      */
@@ -62,23 +52,10 @@ public class Orders {
      */
     private String userId;
 
-    /**
-     * 商品id
-     */
-    private String goodsId;
+    private SimpleGoodsRetVo goods;
 
-    /**
-     * 店铺id
-     */
     private String shopId;
-    /**
-     * 订单状态
-     * 0 未支付，生成订单
-     * 1 已支付，待收货
-     * 2 已确认收货
-     * 3 发起退款，待商家确认
-     * 4 已退款
-     */
+
     private Integer state;
 
     private Goods.Comment comment;
@@ -89,17 +66,11 @@ public class Orders {
     @LastModifiedBy
     private LocalDateTime modifiedTime;
 
-    public static enum OrderState {
-        NOT_PAY(0, "未支付"),
-        PAYED(1, "已支付");
-
-        private int code;
-
-        private String description;
-
-        OrderState(int code, String description) {
-            this.code = code;
-            this.description = description;
-        }
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class SimpleGoodsRetVo {
+        private String id;
+        private String name;
     }
 }

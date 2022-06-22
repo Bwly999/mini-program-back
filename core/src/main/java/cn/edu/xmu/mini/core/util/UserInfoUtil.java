@@ -2,7 +2,6 @@ package cn.edu.xmu.mini.core.util;
 
 import cn.edu.xmu.mini.core.constants.SecurityConstants;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.util.Assert;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -16,7 +15,7 @@ public class UserInfoUtil {
         try {
             HttpServletRequest httpServletRequest = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
             String payload = httpServletRequest.getHeader(SecurityConstants.JWT_PAYLOAD_KEY);
-            Assert.notNull(payload, "http header not exist jwt payload");
+
 
             String decodePayload = URLDecoder.decode(payload, "UTF-8");
             String userId = JacksonUtil.parseObject(decodePayload, "userId", String.class);
@@ -25,5 +24,9 @@ public class UserInfoUtil {
             log.error("UserInfoUtil getUserId:" + e.getMessage());
             return null;
         }
+    }
+
+    public static String getShopId() {
+        return getUserId();
     }
 }

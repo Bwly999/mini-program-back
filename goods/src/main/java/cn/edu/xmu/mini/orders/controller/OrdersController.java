@@ -1,5 +1,6 @@
 package cn.edu.xmu.mini.orders.controller;
 
+import cn.edu.xmu.mini.core.aop.LoginUser;
 import cn.edu.xmu.mini.core.util.Common;
 import cn.edu.xmu.mini.core.util.ReturnNo;
 import cn.edu.xmu.mini.core.util.ReturnObject;
@@ -7,10 +8,14 @@ import cn.edu.xmu.mini.goods.dao.GoodsDao;
 import cn.edu.xmu.mini.goods.model.Goods;
 import cn.edu.xmu.mini.orders.dao.OrdersDao;
 import cn.edu.xmu.mini.orders.model.GenerateOrderVo;
+import cn.edu.xmu.mini.orders.model.OrderRetVo;
 import cn.edu.xmu.mini.orders.model.Orders;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -19,6 +24,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,6 +51,11 @@ public class OrdersController {
         return Common.decorateReturnObject(new ReturnObject(orders.get()));
     }
 
+    /**
+     * 用户查询自己的订单
+     * @param userId
+     * @return
+     */
     @GetMapping("/{userId}")
     public Object getOrdersByUserId(@PathVariable String userId) {
 
@@ -54,17 +65,42 @@ public class OrdersController {
     }
 
     /**
+     * 查询店铺订单
      * @param
      * @return
      */
-    @GetMapping("/{shopId}")
-    public Object getOrdersByShopId(@PathVariable String shopId) {
-        Orders order = Orders.builder()
-                .shopId(shopId).build();
-        return Common.decorateReturnObject(new ReturnObject(ordersDao.findAll(Example.of(order))));
+    @GetMapping("")
+    public Object getOrdersByShopId(@LoginUser String shopId,
+                                    @RequestParam(required = false) Integer state,
+                                    @RequestParam(defaultValue = "1") Integer page,
+                                    @RequestParam(defaultValue = "10") Integer pageSize) {
+
+        Orders orderExample = Orders.builder()
+                .shopId(shopId)
+                .state(state)
+                .build();
+        Page<Orders> ordersPage = ordersDao.findAll(Example.of(orderExample), PageRequest.of(page, pageSize));
+        List<Orders> orders = ordersPage.getContent();
+
+        List<OrderRetVo> orderRetVos = new ArrayList<>(orders.size());
+        for (var order : orders) {
+            OrderRetVo orderRetVo = new OrderRetVo();
+            BeanUtils.copyProperties(order, orderRetVo);
+            String goodsId = order.getGoodsId();
+            String goodsName = goodsDao.findById(goodsId).map(Goods::getName).orElse(null);
+            orderRetVo.setGoods(new OrderRetVo.SimpleGoodsRetVo(goodsId, goodsName));
+
+            orderRetVos.add(orderRetVo);
+        }
+
+        return Common.decorateReturnObject(new ReturnObject(new PageImpl<>(orderRetVos, ordersPage.getPageable(), ordersPage.getTotalElements())));
     }
 
-    //生成订单
+    /**
+     * 生成订单
+     * @param generateOrderVo
+     * @return
+     */
     @PostMapping("")
     public Object createOrder(@RequestBody @Valid GenerateOrderVo generateOrderVo) {
         Goods goods = mongoTemplate.findById(generateOrderVo.getGoodsId(), Goods.class);

@@ -51,7 +51,7 @@ public class AuditAspect {
 
     //配置controller环绕通知,使用在方法aspect()上注册的切入点
     @Around("auditAspect()")
-    public Object around(JoinPoint joinPoint){
+    public Object around(JoinPoint joinPoint) throws Throwable {
         MethodSignature ms = (MethodSignature) joinPoint.getSignature();
         Method method = ms.getMethod();
 
@@ -118,7 +118,7 @@ public class AuditAspect {
         try {
             obj = ((ProceedingJoinPoint) joinPoint).proceed(args);
         } catch (Throwable e) {
-
+            throw e;
         }
         return obj;
     }
