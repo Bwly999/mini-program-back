@@ -27,5 +27,7 @@ spring:
 
 mini:
   weixin:
-    appId: wx9f7210679a76509d
-    appSecret: e8a19fe3433bc2f19a76fe4e7925bc11
+    appId: wx6058db1a716236bc
+    appSecret: a7481beaef239a5463e7975b6d373b37
+#    appId: wx9f7210679a76509d
+#    appSecret: e8a19fe3433bc2f19a76fe4e7925bc11

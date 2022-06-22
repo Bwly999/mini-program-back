@@ -65,6 +65,18 @@ public class UserController {
     }
 
     /**
+     * 判断该微信码对应的用户是否存在
+     * @return
+     * @throws Exception
+     */
+    @GetMapping("/{code}:exist")
+    public Object isUserExist(@PathVariable String code) throws Exception {
+        String openId = getUserOpenId(code);
+        User user = userService.getUserByOpenId(openId);
+        return ResponseUtil.ok(user != null);
+    }
+
+    /**
      *
      * @param userVo
      * @return "{\"errno\":0,\"data\":{\"session_key\":\"uQER4NDjMtLx90wnxMuRbg==\",\"openid\":\"o-tMy6JWvFAUp6l7NWHadbr9SlBA\"},\"errmsg\":\"成功\"}"

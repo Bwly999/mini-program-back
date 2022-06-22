@@ -32,7 +32,7 @@ public class JwtHelper {
     // 签名的观众
     static final String AUDIENCE = "MINIAPP";
     // Request中的变量名
-    public static final String LOGIN_TOKEN_KEY = "authorization";
+    public static final String LOGIN_TOKEN_KEY = "Authorization";
 
     public class UserAndDepart{
         private String userId;

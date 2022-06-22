@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 @RestControllerAdvice
 @Slf4j
-public class GlobaExceptionHandler {
+public class GlobalExceptionHandler {
     /**
      * 参数校验失败的异常统一处理
      * @param e
