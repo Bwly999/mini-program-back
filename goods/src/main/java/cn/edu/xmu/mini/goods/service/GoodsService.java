@@ -37,7 +37,6 @@ public class GoodsService {
         // 在mongodb里page为0-index
         Query query = new Query();
         if (name != null) {
-//            query.addCriteria(Criteria.where("name").regex(String.format("^.*%s.*$", name)));
             query.addCriteria(Criteria.where("name").regex(name));
         }
         if (category != null) {
@@ -58,7 +57,6 @@ public class GoodsService {
     public Goods saveGoods(GoodsVo goodsVo) {
         Goods goods = new Goods();
         BeanUtils.copyProperties(goodsVo, goods);
-        goods.setState(0);
         return goodsDao.insert(goods);
     }
 

@@ -81,7 +81,6 @@ public class Goods {
 
     private Boolean deleted;
 
-
     @Data
     public static class Comment {
         private String userId;
