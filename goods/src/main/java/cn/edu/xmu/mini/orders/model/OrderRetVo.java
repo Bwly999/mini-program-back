@@ -1,11 +1,10 @@
 package cn.edu.xmu.mini.orders.model;
 
 import cn.edu.xmu.mini.goods.model.Goods;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
 
 import java.time.LocalDateTime;
 
@@ -60,10 +59,10 @@ public class OrderRetVo {
 
     private Goods.Comment comment;
 
-    @CreatedDate
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdTime;
 
-    @LastModifiedBy
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime modifiedTime;
 
     @Data

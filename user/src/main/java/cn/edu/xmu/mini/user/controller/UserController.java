@@ -11,6 +11,7 @@ import cn.edu.xmu.mini.user.model.User;
 import cn.edu.xmu.mini.user.model.UserVo;
 import cn.edu.xmu.mini.user.model.weixin.Session;
 import cn.edu.xmu.mini.user.service.UserService;
+import com.mongodb.client.result.UpdateResult;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -109,11 +110,14 @@ public class UserController {
      */
     @PostMapping("/address")
     @Audit
-    public Object saveAddress(@RequestBody Address address, @LoginUser String userId) {
-        Criteria criteria = Criteria.where("id").is(userId);
+    public Object saveAddress(@RequestBody Address address, @LoginUser String openId) {
+        Criteria criteria = Criteria.where("openId").is(openId);
         address.setId(ObjectId.get().toString());
         Update update = new Update().addToSet("addressList", address);
-        mongoTemplate.updateFirst(new Query(criteria), update, User.class);
+        UpdateResult updateResult = mongoTemplate.updateFirst(new Query(criteria), update, User.class);
+        if (updateResult.getModifiedCount() == 0) {
+            return Common.decorateReturnObject(new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST, "地址添加失败"));
+        }
         return Common.decorateReturnObject(new ReturnObject());
     }
 
@@ -122,32 +126,27 @@ public class UserController {
      */
     @GetMapping("/address")
     @Audit
-    public Object getAddress(@LoginUser String userId) {
-        User user = mongoTemplate.findById(userId, User.class);
+    public Object getAddress(@LoginUser String openId) {
+        User user = userService.getUserByOpenId(openId);
         return ResponseUtil.ok(user.getAddressList());
     }
 
     /**
      * 修改当前用户底下指定addressId的address
      * @param addressId
-     * @param userId
+     * @param openId
      * @return
      */
     @PutMapping("/address/{id}")
     @Audit
-    public Object changeAddressById(@PathVariable("id") String addressId, @LoginUser String userId, @RequestBody Address address) {
-        Criteria criteria = Criteria.where("id").is(userId)
+    public Object changeAddressById(@PathVariable("id") String addressId, @LoginUser String openId, @RequestBody Address address) {
+        Criteria criteria = Criteria.where("openId").is(openId)
                             .and("addressList.id").is(addressId);
         Update update = MongoUtils.getUpdateByObj(address);
-        mongoTemplate.updateFirst(new Query(criteria), update, User.class);
+        UpdateResult updateResult = mongoTemplate.updateFirst(new Query(criteria), update, User.class);
+        if (updateResult.getMatchedCount() == 0) {
+            return Common.decorateReturnObject(new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST, "该地址不存在"));
+        }
         return ResponseUtil.ok();
-//        User user = mongoTemplate.findById(userId, User.class);
-//        List<Address> addressList = user.getAddressList();
-//        for (Address address : addressList) {
-//            if (address.getId().equals(addressId)) {
-//                return ResponseUtil.ok(address);
-//            }
-//        }
-//        return Common.decorateReturnObject(new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST));
     }
 }

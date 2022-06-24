@@ -10,8 +10,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-
 @Service
 public class UserService implements InitializingBean {
     @Autowired
@@ -35,7 +33,6 @@ public class UserService implements InitializingBean {
         User user = new User();
         BeanUtils.copyProperties(userVo, user);
         user.setOpenId(userVo.getOpenId());
-        user.setAddressList(new ArrayList<>());
 
         return mongoTemplate.insert(user);
     }

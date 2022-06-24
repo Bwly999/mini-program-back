@@ -112,7 +112,6 @@ public class OrdersController {
 
         Orders orders = new Orders();
         BeanUtils.copyProperties(generateOrderVo, orders);
-        orders.setState(0);
         orders.setPayAmount(payAmount);
         orders.setShopId(goods.getShopId());
         Orders order = ordersDao.insert(orders);

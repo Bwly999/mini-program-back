@@ -22,6 +22,7 @@ public class GoodsRetVo {
     private Integer monthSale;
 
     private Integer price;
+
     private Integer discountPrice;
 
     private Integer stock;
