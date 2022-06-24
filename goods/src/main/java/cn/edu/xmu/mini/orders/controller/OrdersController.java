@@ -46,7 +46,7 @@ public class OrdersController {
 
         Optional<Orders> orders = ordersDao.findById(ordersId);
         if (orders.isEmpty()) {
-            return List.of();
+            return Common.decorateReturnObject(new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST));
         }
         return Common.decorateReturnObject(new ReturnObject(orders.get()));
     }
@@ -56,9 +56,8 @@ public class OrdersController {
      * @param userId
      * @return
      */
-    @GetMapping("/{userId}")
-    public Object getOrdersByUserId(@PathVariable String userId) {
-
+    @GetMapping("/user")
+    public Object getOrdersByUserId(@LoginUser String userId) {
         Orders order = Orders.builder()
                 .userId(userId).build();
         return Common.decorateReturnObject(new ReturnObject(ordersDao.findAll(Example.of(order))));

@@ -62,7 +62,7 @@ public class UserController {
 
 
     public String creatToken(User user) {
-        return jwtHelper.createToken(user.getOpenId(), user.getNickName(), 0L, 0, 3 * 24 * 60 * 60);
+        return jwtHelper.createToken(user.getId(), user.getNickName(), 0L, 0, 3 * 24 * 60 * 60);
     }
 
     /**
@@ -98,7 +98,7 @@ public class UserController {
     @GetMapping("/info")
     @Audit
     public Object getUserInfo(@LoginUser String userId) {
-        User user = userService.getUserByOpenId(userId);
+        User user = mongoTemplate.findById(userId, User.class);
         if (user == null) {
             return Common.decorateReturnObject(new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST));
         }
@@ -110,8 +110,8 @@ public class UserController {
      */
     @PostMapping("/address")
     @Audit
-    public Object saveAddress(@RequestBody Address address, @LoginUser String openId) {
-        Criteria criteria = Criteria.where("openId").is(openId);
+    public Object saveAddress(@RequestBody Address address, @LoginUser String userId) {
+        Criteria criteria = Criteria.where("id").is(userId);
         address.setId(ObjectId.get().toString());
         Update update = new Update().addToSet("addressList", address);
         UpdateResult updateResult = mongoTemplate.updateFirst(new Query(criteria), update, User.class);
@@ -126,21 +126,24 @@ public class UserController {
      */
     @GetMapping("/address")
     @Audit
-    public Object getAddress(@LoginUser String openId) {
-        User user = userService.getUserByOpenId(openId);
+    public Object getAddress(@LoginUser String userId) {
+        User user = mongoTemplate.findById(userId, User.class);
+        if (user == null) {
+            return Common.decorateReturnObject(new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST));
+        }
         return ResponseUtil.ok(user.getAddressList());
     }
 
     /**
      * 修改当前用户底下指定addressId的address
      * @param addressId
-     * @param openId
+     * @param userId
      * @return
      */
     @PutMapping("/address/{id}")
     @Audit
-    public Object changeAddressById(@PathVariable("id") String addressId, @LoginUser String openId, @RequestBody Address address) {
-        Criteria criteria = Criteria.where("openId").is(openId)
+    public Object changeAddressById(@PathVariable("id") String addressId, @LoginUser String userId, @RequestBody Address address) {
+        Criteria criteria = Criteria.where("id").is(userId)
                             .and("addressList.id").is(addressId);
         Update update = MongoUtils.getUpdateByObj(address);
         UpdateResult updateResult = mongoTemplate.updateFirst(new Query(criteria), update, User.class);
