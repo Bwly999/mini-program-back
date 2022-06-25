@@ -37,7 +37,7 @@ spring:
       routes:
         - id: 用户中心
 #          uri: lb://user-service
-          uri: http://127.0.0.1:8081
+          uri: http://127.0.0.1:8091
           predicates:
             - Path=/user/**, /admin/**
           filters:
@@ -45,7 +45,7 @@ spring:
 
         - id: 商品中心
 #          uri: lb://goods-service
-          uri: http://127.0.0.1:8082
+          uri: http://127.0.0.1:8092
           predicates:
             - Path=/goods/**
           filters:
