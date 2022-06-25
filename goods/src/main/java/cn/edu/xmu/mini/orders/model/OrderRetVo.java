@@ -71,5 +71,6 @@ public class OrderRetVo {
     public static class SimpleGoodsRetVo {
         private String id;
         private String name;
+        private String coverImgUrl;
     }
 }

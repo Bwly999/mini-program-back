@@ -13,12 +13,11 @@ import javax.validation.constraints.NotNull;
 @Data
 public class GenerateOrderVo {
     @NotNull
-    private String userId;
-    @NotNull
     private String goodsId;
     @NotNull
     @Min(1)
     private Integer payNumber;
+
     private Integer payAmount;
 
     @NotNull

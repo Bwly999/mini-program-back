@@ -1,5 +1,6 @@
 package cn.edu.xmu.mini.orders.controller;
 
+import cn.edu.xmu.mini.core.aop.Audit;
 import cn.edu.xmu.mini.core.aop.LoginUser;
 import cn.edu.xmu.mini.core.util.Common;
 import cn.edu.xmu.mini.core.util.ReturnNo;
@@ -41,6 +42,17 @@ public class OrdersController {
     @Autowired
     private MongoTemplate mongoTemplate;
 
+    private OrderRetVo transformOrderToRetVo(Orders order) {
+        OrderRetVo orderRetVo = new OrderRetVo();
+        BeanUtils.copyProperties(order, orderRetVo);
+        String goodsId = order.getGoodsId();
+        Optional<Goods> goods = goodsDao.findById(goodsId);
+        String goodsName = goods.map(Goods::getName).orElse(null);
+        String coverImgUrl = goods.map(Goods::getCoverImgUrl).orElse(null);
+        orderRetVo.setGoods(new OrderRetVo.SimpleGoodsRetVo(goodsId, goodsName, coverImgUrl));
+        return orderRetVo;
+    }
+
     @GetMapping("/{ordersId}")
     public Object getOrdersById(@PathVariable String ordersId) {
 
@@ -48,8 +60,13 @@ public class OrdersController {
         if (orders.isEmpty()) {
             return Common.decorateReturnObject(new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST));
         }
-        return Common.decorateReturnObject(new ReturnObject(orders.get()));
+
+        Orders order = orders.get();
+        OrderRetVo orderRetVo = transformOrderToRetVo(order);
+        return Common.decorateReturnObject(new ReturnObject(orderRetVo));
     }
+
+
 
     /**
      * 用户查询自己的订单
@@ -57,10 +74,20 @@ public class OrdersController {
      * @return
      */
     @GetMapping("/user")
-    public Object getOrdersByUserId(@LoginUser String userId) {
-        Orders order = Orders.builder()
-                .userId(userId).build();
-        return Common.decorateReturnObject(new ReturnObject(ordersDao.findAll(Example.of(order))));
+    @Audit
+    public Object getOrdersByUserId(@LoginUser String userId, @RequestParam(value = "state", required = false) Integer state) {
+        Orders orderExample = Orders.builder()
+                .userId(userId)
+                .state(state)
+                .build();
+
+        List<Orders> ordersList = ordersDao.findAll(Example.of(orderExample));
+        List<OrderRetVo> orderRetVoList = new ArrayList<>(ordersList.size());
+        for (var order : ordersList) {
+            OrderRetVo orderRetVo = transformOrderToRetVo(order);
+            orderRetVoList.add(orderRetVo);
+        }
+        return Common.decorateReturnObject(new ReturnObject(orderRetVoList));
     }
 
     /**
@@ -83,12 +110,7 @@ public class OrdersController {
 
         List<OrderRetVo> orderRetVos = new ArrayList<>(orders.size());
         for (var order : orders) {
-            OrderRetVo orderRetVo = new OrderRetVo();
-            BeanUtils.copyProperties(order, orderRetVo);
-            String goodsId = order.getGoodsId();
-            String goodsName = goodsDao.findById(goodsId).map(Goods::getName).orElse(null);
-            orderRetVo.setGoods(new OrderRetVo.SimpleGoodsRetVo(goodsId, goodsName));
-
+            OrderRetVo orderRetVo = transformOrderToRetVo(order);
             orderRetVos.add(orderRetVo);
         }
 
@@ -101,7 +123,8 @@ public class OrdersController {
      * @return
      */
     @PostMapping("")
-    public Object createOrder(@RequestBody @Valid GenerateOrderVo generateOrderVo) {
+    @Audit
+    public Object createOrder(@RequestBody @Valid GenerateOrderVo generateOrderVo, @LoginUser String userId) {
         Goods goods = mongoTemplate.findById(generateOrderVo.getGoodsId(), Goods.class);
         if (goods == null) {
             return Common.decorateReturnObject(new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST, "商品不存在"));
@@ -111,6 +134,7 @@ public class OrdersController {
 
         Orders orders = new Orders();
         BeanUtils.copyProperties(generateOrderVo, orders);
+        orders.setUserId(userId);
         orders.setPayAmount(payAmount);
         orders.setShopId(goods.getShopId());
         Orders order = ordersDao.insert(orders);
