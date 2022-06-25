@@ -39,7 +39,7 @@ public class WebDavStorage implements Storage {
                 sardine.createDirectory(baseUrl);
             }
 
-            String fileName = UUID.randomUUID() + "_" + keyName;
+            String fileName = UUID.randomUUID() + "." + keyName;
             String fileUrl = baseUrl + fileName;
 
             sardine.put(fileUrl, inputStream);
