@@ -99,6 +99,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
+                    <classifier>exec</classifier>
                     <mainClass>cn.edu.xmu.mini.GoodsApplication</mainClass>
                 </configuration>
             </plugin>
