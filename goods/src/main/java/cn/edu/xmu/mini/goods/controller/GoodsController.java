@@ -26,6 +26,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -83,7 +84,9 @@ public class GoodsController {
                            @RequestParam(required = false) Integer highPrice,
                            @RequestParam(defaultValue = "1") Integer page,
                            @RequestParam(defaultValue = "10") Integer pageSize) {
-
+        if (!StringUtils.hasLength(name)) {
+            name = null;
+        }
         Page<Goods> goodsPage = goodsService.getGoods(name, category, lowPrice, highPrice, page, pageSize);
         return Common.decorateReturnObject(new ReturnObject(goodsPage));
     }
@@ -125,9 +128,11 @@ public class GoodsController {
         GoodsRetVo goodsRetVo = new GoodsRetVo();
         BeanUtils.copyProperties(goods.get(), goodsRetVo);
 
-        Admin admin = mongoTemplate.findById(goods.get().getShopId(), Admin.class);
-        String shopName = Optional.ofNullable(admin).map(Admin::getShop).map(Shop::getName).orElse(null);
-        goodsRetVo.setShopName(shopName);
+        if (goods.get().getShopId() != null) {
+            Admin admin = mongoTemplate.findById(goods.get().getShopId(), Admin.class);
+            String shopName = Optional.ofNullable(admin).map(Admin::getShop).map(Shop::getName).orElse(null);
+            goodsRetVo.setShopName(shopName);
+        }
         return Common.decorateReturnObject(new ReturnObject(goodsRetVo));
     }
 

@@ -11,6 +11,8 @@ import cn.edu.xmu.mini.orders.dao.OrdersDao;
 import cn.edu.xmu.mini.orders.model.GenerateOrderVo;
 import cn.edu.xmu.mini.orders.model.OrderRetVo;
 import cn.edu.xmu.mini.orders.model.Orders;
+import cn.edu.xmu.mini.user.model.Admin;
+import cn.edu.xmu.mini.user.model.Shop;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -47,9 +49,18 @@ public class OrdersController {
         BeanUtils.copyProperties(order, orderRetVo);
         String goodsId = order.getGoodsId();
         Optional<Goods> goods = goodsDao.findById(goodsId);
+        if (goods.isEmpty()) {
+            return orderRetVo;
+        }
+
         String goodsName = goods.map(Goods::getName).orElse(null);
         String coverImgUrl = goods.map(Goods::getCoverImgUrl).orElse(null);
         orderRetVo.setGoods(new OrderRetVo.SimpleGoodsRetVo(goodsId, goodsName, coverImgUrl));
+        if (goods.get().getShopId() != null) {
+            Admin admin = mongoTemplate.findById(goods.get().getShopId(), Admin.class);
+            String shopName = Optional.ofNullable(admin).map(Admin::getShop).map(Shop::getName).orElse(null);
+            orderRetVo.setShopName(shopName);
+        }
         return orderRetVo;
     }
 

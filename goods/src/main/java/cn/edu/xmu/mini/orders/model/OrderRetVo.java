@@ -55,6 +55,8 @@ public class OrderRetVo {
 
     private String shopId;
 
+    private String shopName;
+
     private Integer state;
 
     private Goods.Comment comment;
