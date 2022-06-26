@@ -18,8 +18,8 @@ public enum ReturnNo {
 
     //所有需要登录才能访问的API都可能会返回以下错误
     //状态码 401
-    AUTH_INVALID_JWT(501,"JWT不合法"),
-    AUTH_JWT_EXPIRED(502,"JWT过期"),
+    AUTH_INVALID_JWT(501,"登录凭证无效"),
+    AUTH_JWT_EXPIRED(502,"登录凭证过期"),
 
     //以下错误码提示可以自行修改
     //--------------------------------------------

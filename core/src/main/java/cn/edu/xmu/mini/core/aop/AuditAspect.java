@@ -23,8 +23,7 @@ import java.util.Date;
 /**
  * @auther mingqiu
  * @date 2020/6/26 下午2:16
- *      modifiedBy Ming Qiu 2020/11/3 22:59
- *
+ * modifiedBy Ming Qiu 2020/11/3 22:59
  */
 @Aspect
 @Component
@@ -32,7 +31,7 @@ public class AuditAspect {
 
     //注入Service用于把日志保存数据库
 
-    private  static  final Logger logger = LoggerFactory.getLogger(AuditAspect. class);
+    private static final Logger logger = LoggerFactory.getLogger(AuditAspect.class);
     private static final String LOG = "%s: %s";
 
     //Controller层切点
@@ -58,31 +57,28 @@ public class AuditAspect {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
         String token = request.getHeader(JwtHelper.LOGIN_TOKEN_KEY);
-        if (token == null){
+        if (token == null) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return ResponseUtil.fail(ReturnNo.AUTH_NEED_LOGIN);
         }
 
         JwtHelper.UserAndDepart userAndDepart = new JwtHelper().verifyTokenAndGetClaims(token);
-        String userId = null;
-        Long departId = null;
-        String userName=null;
-        Integer userLevel=null;
-        if (null != userAndDepart){
-            userId = userAndDepart.getUserId();
-            departId = userAndDepart.getDepartId();
-            userName=userAndDepart.getUserName();
-            userLevel=userAndDepart.getUserLevel();
+        if (userAndDepart == null) {
+            return Common.decorateReturnObject(ReturnObject.AUTH_INVALID_JWT_RET);
         }
 
-        assert userAndDepart != null;
+        String userId = userAndDepart.getUserId();
+        Long departId = userAndDepart.getDepartId();
+        String userName = userAndDepart.getUserName();
+        Integer userLevel = userAndDepart.getUserLevel();
+
         if (userAndDepart.getExpTime().before(new Date())) {
             return Common.decorateReturnObject(new ReturnObject(ReturnNo.AUTH_JWT_EXPIRED));
         }
 
         if (userId == null) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            logger.info(String.format(LOG,"around", "userId is null"));
+            logger.info(String.format(LOG, "around", "userId is null"));
             return ResponseUtil.fail(ReturnNo.AUTH_NEED_LOGIN);
         }
 
@@ -90,7 +86,7 @@ public class AuditAspect {
         Annotation[][] annotations = method.getParameterAnnotations();
         for (int i = 0; i < annotations.length; i++) {
             Annotation[] paramAnn = annotations[i];
-            if (paramAnn.length == 0){
+            if (paramAnn.length == 0) {
                 continue;
             }
             for (Annotation annotation : paramAnn) {

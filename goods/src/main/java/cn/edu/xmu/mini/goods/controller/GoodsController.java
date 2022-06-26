@@ -10,11 +10,15 @@ import cn.edu.xmu.mini.goods.dao.GoodsDao;
 import cn.edu.xmu.mini.goods.model.Goods;
 import cn.edu.xmu.mini.goods.model.vo.ChangeStockVo;
 import cn.edu.xmu.mini.goods.model.vo.CommentVo;
+import cn.edu.xmu.mini.goods.model.vo.GoodsRetVo;
 import cn.edu.xmu.mini.goods.model.vo.GoodsVo;
 import cn.edu.xmu.mini.goods.service.GoodsService;
 import cn.edu.xmu.mini.orders.model.Orders;
+import cn.edu.xmu.mini.user.model.Admin;
+import cn.edu.xmu.mini.user.model.Shop;
 import com.mongodb.client.result.UpdateResult;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -61,7 +65,17 @@ public class GoodsController {
     }
 
     // 用户api
-    //根据名称查询商品
+
+    /**
+     * 查询商品
+     * @param name
+     * @param category
+     * @param lowPrice
+     * @param highPrice
+     * @param page
+     * @param pageSize
+     * @return
+     */
     @GetMapping("")
     public Object getGoods(@RequestParam(required = false) String name,
                            @RequestParam(required = false) String category,
@@ -107,14 +121,14 @@ public class GoodsController {
         if (goods.isEmpty()) {
             return Common.decorateReturnObject(new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST));
         }
-        //Todo 加入查询店铺名
-//        GoodsRetVo goodsRetVo = new GoodsRetVo();
-//        BeanUtils.copyProperties(goods.get(), goodsRetVo);
-//
-//        String shopName;
-//        mongoTemplate.findById(goods.get().getShopId(), )
-//        goodsRetVo.setShopName(mongoTemplate.);
-        return Common.decorateReturnObject(new ReturnObject(goods.get()));
+
+        GoodsRetVo goodsRetVo = new GoodsRetVo();
+        BeanUtils.copyProperties(goods.get(), goodsRetVo);
+
+        Admin admin = mongoTemplate.findById(goods.get().getShopId(), Admin.class);
+        String shopName = Optional.ofNullable(admin).map(Admin::getShop).map(Shop::getName).orElse(null);
+        goodsRetVo.setShopName(shopName);
+        return Common.decorateReturnObject(new ReturnObject(goodsRetVo));
     }
 
     /**

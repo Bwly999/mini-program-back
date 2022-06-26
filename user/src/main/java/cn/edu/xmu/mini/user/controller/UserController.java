@@ -143,9 +143,17 @@ public class UserController {
     @PutMapping("/address/{id}")
     @Audit
     public Object changeAddressById(@PathVariable("id") String addressId, @LoginUser String userId, @RequestBody Address address) {
+        address.setId(null);
+        if (address.getIsDefault() != null && address.getIsDefault()) {
+            Criteria criteria = Criteria.where("id").is(userId);
+            Update update = new Update().set("addressList.$.isDefault", false);
+            mongoTemplate.updateFirst(new Query(criteria), update, User.class);
+        }
+
         Criteria criteria = Criteria.where("id").is(userId)
                             .and("addressList.id").is(addressId);
-        Update update = MongoUtils.getUpdateByObj(address);
+        Update update = MongoUtils.getUpdateByObj(address, "addressList.$.");
+
         UpdateResult updateResult = mongoTemplate.updateFirst(new Query(criteria), update, User.class);
         if (updateResult.getMatchedCount() == 0) {
             return Common.decorateReturnObject(new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST, "该地址不存在"));
