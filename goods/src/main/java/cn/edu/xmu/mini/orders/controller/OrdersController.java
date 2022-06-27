@@ -120,7 +120,7 @@ public class OrdersController {
                 .goodsName(goodsName)
                 .build();
         ExampleMatcher matcher = ExampleMatcher.matching()
-                .withMatcher("goodsName", ExampleMatcher.GenericPropertyMatcher::regex);
+                .withMatcher("goodsName", ExampleMatcher.GenericPropertyMatcher::contains);
         Page<Orders> ordersPage = ordersDao.findAll(Example.of(orderExample, matcher), PageRequest.of(page, pageSize));
         List<Orders> orders = ordersPage.getContent();
 
