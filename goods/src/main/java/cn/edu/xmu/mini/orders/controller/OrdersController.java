@@ -15,10 +15,7 @@ import cn.edu.xmu.mini.user.model.Admin;
 import cn.edu.xmu.mini.user.model.Shop;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.*;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -122,7 +119,9 @@ public class OrdersController {
                 .goodsId(goodsId)
                 .goodsName(goodsName)
                 .build();
-        Page<Orders> ordersPage = ordersDao.findAll(Example.of(orderExample), PageRequest.of(page, pageSize));
+        ExampleMatcher matcher = ExampleMatcher.matching()
+                .withMatcher("goodsName", ExampleMatcher.GenericPropertyMatcher::regex);
+        Page<Orders> ordersPage = ordersDao.findAll(Example.of(orderExample, matcher), PageRequest.of(page, pageSize));
         List<Orders> orders = ordersPage.getContent();
 
         List<OrderRetVo> orderRetVos = new ArrayList<>(orders.size());
