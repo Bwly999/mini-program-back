@@ -67,6 +67,8 @@ public class Orders {
      */
     private String goodsId;
 
+    private String goodsName;
+
     /**
      * 店铺id
      */

@@ -90,7 +90,7 @@ public class GoodsService {
     public void postComment(String goodsId, CommentVo commentVo) {
         Goods.Comment comment = new Goods.Comment();
         BeanUtils.copyProperties(commentVo, comment);
-        comment.setCreateTime(LocalDateTime.now());
+        comment.setCreatedTime(LocalDateTime.now());
 
         Criteria criteria = Criteria.where("id").is(goodsId);
         Update update = new Update().addToSet("commentList", comment);

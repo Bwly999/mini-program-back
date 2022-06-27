@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 
 import java.time.LocalDateTime;
@@ -87,7 +88,8 @@ public class Goods {
         private String avatarUrl;
         private String nickName;
         private Integer rate;
-        private LocalDateTime createTime;
+        @CreatedDate
+        private LocalDateTime createdTime;
         private String content;
     }
 }

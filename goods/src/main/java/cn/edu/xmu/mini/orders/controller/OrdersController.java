@@ -109,12 +109,18 @@ public class OrdersController {
     @GetMapping("")
     public Object getOrdersByShopId(@LoginUser String shopId,
                                     @RequestParam(required = false) Integer state,
+                                    @RequestParam(required = false) Integer payWay,
+                                    @RequestParam(required = false) String goodsId,
+                                    @RequestParam(required = false) String goodsName,
                                     @RequestParam(defaultValue = "1") Integer page,
                                     @RequestParam(defaultValue = "10") Integer pageSize) {
 
         Orders orderExample = Orders.builder()
                 .shopId(shopId)
                 .state(state)
+                .payWay(payWay)
+                .goodsId(goodsId)
+                .goodsName(goodsName)
                 .build();
         Page<Orders> ordersPage = ordersDao.findAll(Example.of(orderExample), PageRequest.of(page, pageSize));
         List<Orders> orders = ordersPage.getContent();
@@ -147,6 +153,7 @@ public class OrdersController {
         BeanUtils.copyProperties(generateOrderVo, orders);
         orders.setUserId(userId);
         orders.setPayAmount(payAmount);
+        orders.setGoodsName(goods.getName());
         orders.setShopId(goods.getShopId());
         Orders order = ordersDao.insert(orders);
         return Common.decorateReturnObject(new ReturnObject(order));
