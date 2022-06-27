@@ -20,6 +20,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -111,7 +112,12 @@ public class OrdersController {
                                     @RequestParam(required = false) String goodsName,
                                     @RequestParam(defaultValue = "1") Integer page,
                                     @RequestParam(defaultValue = "10") Integer pageSize) {
-
+        if (!StringUtils.hasLength(goodsId)) {
+            goodsId = null;
+        }
+        if (!StringUtils.hasLength(goodsName)) {
+            goodsName = null;
+        }
         Orders orderExample = Orders.builder()
                 .shopId(shopId)
                 .state(state)
