@@ -54,9 +54,10 @@ public class GoodsService {
         return new PageImpl<>(goodsList, pageRequest, total);
     }
 
-    public Goods saveGoods(GoodsVo goodsVo) {
+    public Goods saveGoods(String shopId, GoodsVo goodsVo) {
         Goods goods = new Goods();
         BeanUtils.copyProperties(goodsVo, goods);
+        goods.setShopId(shopId);
         return goodsDao.insert(goods);
     }
 

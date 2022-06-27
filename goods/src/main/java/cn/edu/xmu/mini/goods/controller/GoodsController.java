@@ -1,5 +1,7 @@
 package cn.edu.xmu.mini.goods.controller;
 
+import cn.edu.xmu.mini.core.aop.Audit;
+import cn.edu.xmu.mini.core.aop.LoginUser;
 import cn.edu.xmu.mini.core.util.Common;
 import cn.edu.xmu.mini.core.util.MongoUtils;
 import cn.edu.xmu.mini.core.util.ReturnNo;
@@ -193,8 +195,10 @@ public class GoodsController {
      * @return
      */
     @PostMapping("")
-    public Object addGoods(@RequestBody GoodsVo goodsVo) {
-        Goods goods = goodsService.saveGoods(goodsVo);
+    @Audit
+    public Object addGoods(@RequestBody GoodsVo goodsVo, @LoginUser String shopId) {
+
+        Goods goods = goodsService.saveGoods(shopId, goodsVo);
         return Common.decorateReturnObject(new ReturnObject(goods));
     }
 
